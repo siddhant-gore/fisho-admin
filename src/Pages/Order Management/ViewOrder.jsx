@@ -64,7 +64,52 @@ const handleSave = async () => {
     }
   };
 
+    function toOrderStatus(statusKey) {
+    switch (statusKey) {
+      case "notAccepted":
+      case "pickup":
+      case "confirmDetails":
+        return "PLACED";
+      case "drop":
+      case "dropped":
+        return "OUT_FOR_DELIVERY";
+      case "proof":
+        return "DELIVERED";
+      case "cancelled":
+        return "CANCELLED";
+      default:
+        return null;
+    }
+  }
+  
+  const statusColorMap = {
+    PLACED: "text-blue-600 bg-blue-50",
+    OUT_FOR_DELIVERY: "text-orange-600 bg-orange-50",
+    DELIVERED: "text-green-600 bg-green-50",
+    CANCELLED: "text-red-600 bg-red-50",
+  };
+  
+  function formatStatusLabel(status) {
+    if (!status) return "Unknown";
+    return status
+      .toLowerCase()
+      .split("_")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
 
+
+  const orderBtn=(record) => {
+    const mappedStatus = toOrderStatus(record?.orderStatus);
+    const colorClass = statusColorMap[mappedStatus] || "text-gray-600 bg-gray-100";
+    const label = formatStatusLabel(mappedStatus);
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-sm  text-nowrap font-medium ${colorClass}`}>
+        {label}
+      </span>
+    );
+  }
 
   const StatusBtn =(record)=>{
   const currentKey = record?.orderStatus;
@@ -171,6 +216,11 @@ const handleSave = async () => {
                 <div className="text-center mx-auto">
                  <div className="max-w-[150px] text-center mx-auto font-bold">
                    <p className="text-center  mt-3">Order Status:</p>
+                   {orderBtn(order)}
+                  
+                  </div>   
+                 <div className="max-w-[150px] text-center mx-auto font-bold">
+                   <p className="text-center  mt-3">Delivery Status:</p>
                    {StatusBtn(order)}
                   
                   </div>   

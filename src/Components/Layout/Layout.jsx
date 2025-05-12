@@ -170,14 +170,14 @@ const Layout = ({ children }) => {
 
 <li
             className={`flex items-center mb-4 hover:bg-[#036DBE] p-2 rounded cursor-pointer ${
-              isOrderOpen ? "bg-[#036DBE]" : ""
+              isContentOpen ? "bg-[#036DBE]" : ""
             }`}
             onClick={() => setIsContentOpen(!isContentOpen)}
           >
             <BiSolidBookContent size={20} className="mr-2" />
             <span>Content Management</span>
             <span className="ml-auto">
-              {isOrderOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              {isContentOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
             </span>
           </li>
 

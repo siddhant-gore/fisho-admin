@@ -107,6 +107,40 @@ const Orders = () => {
       }
     };
 
+    function toOrderStatus(statusKey) {
+  switch (statusKey) {
+    case "notAccepted":
+    case "pickup":
+    case "confirmDetails":
+      return "PLACED";
+    case "drop":
+    case "dropped":
+      return "OUT_FOR_DELIVERY";
+    case "proof":
+      return "DELIVERED";
+    case "cancelled":
+      return "CANCELLED";
+    default:
+      return null;
+  }
+}
+
+const statusColorMap = {
+  PLACED: "text-blue-600 bg-blue-50",
+  OUT_FOR_DELIVERY: "text-orange-600 bg-orange-50",
+  DELIVERED: "text-green-600 bg-green-50",
+  CANCELLED: "text-red-600 bg-red-50",
+};
+
+function formatStatusLabel(status) {
+  if (!status) return "Unknown";
+  return status
+    .toLowerCase()
+    .split("_")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
   
   // useEffect(() => {
   //   if (!token) return;
@@ -214,8 +248,24 @@ const Orders = () => {
     //    render: (data) => data?.priceByAdmin || 'N/A'
     //   },
       {
-        title: "Order Status",
-        key: "orderStatus",
+  title: "Order Status",
+  key: "orderStatus",
+  render: (_, record) => {
+    const mappedStatus = toOrderStatus(record?.orderStatus);
+    const colorClass = statusColorMap[mappedStatus] || "text-gray-600 bg-gray-100";
+    const label = formatStatusLabel(mappedStatus);
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-sm  text-nowrap font-medium ${colorClass}`}>
+        {label}
+      </span>
+    );
+  },
+}
+,
+      {
+        title: "Delivery Status",
+        key: "deliveryStatus",
         render: (_, record) => {
             const currentKey = record?.orderStatus;
       
@@ -247,7 +297,7 @@ const Orders = () => {
                   onClick: ({ key }) => handleStatusChange(key, record),
                 }}
               >
-                <div className=" border rounded-lg  text-center" style={{ color: BulkOrderStatuses.find(s => s.key === currentKey)?.color }}>
+                <div className=" border rounded-full  text-nowrap text-center" style={{ color: BulkOrderStatuses.find(s => s.key === currentKey)?.color }}>
                   {BulkOrderStatuses?.find((s) => s.key === currentKey)?.label || "Select Status"}
                 </div>
               </Dropdown>
