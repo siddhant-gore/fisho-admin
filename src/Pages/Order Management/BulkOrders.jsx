@@ -208,7 +208,7 @@ const BulkOrders = () => {
        key: "phone",
        render: (data) => data?.user?.phone_no
       },
-    { title: "Order Price ($)", 
+    { title: "Order Price", 
        key: "priceByAdmin",
       //  dataIndex:"priceByAdmin"
        render: (data) => data?.priceByAdmin || 'N/A'
