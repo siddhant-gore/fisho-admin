@@ -3,7 +3,8 @@ import { Table, Modal, Input, Button, Upload, message } from "antd";
 import { FiEdit, FiTrash, FiEye } from "react-icons/fi";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useAxiosInstance } from "../../AxiosInstance";
+import { useDeleteProductByIdMutation, useGetAllProductsQuery, useUpdateProductByIdMutation } from "../../redux/slices/apiSlice";
+import { getError } from "../../utils/error";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -11,32 +12,23 @@ const Products = () => {
   const [editProduct, setEditProduct] = useState(null);
   const [imageList, setImageList] = useState([]);
   const navigate = useNavigate();
-  const axiosInstance = useAxiosInstance();
+  const {data,isLoading} = useGetAllProductsQuery()
+  const [deleteProduct, {isLoading:deleteLoading}] = useDeleteProductByIdMutation()
+  const [updateProduct, {isLoading:updateLoading}] = useUpdateProductByIdMutation()
 
-  // Fetch products from backend
-  const fetchProducts = async () => {
-    try {
-      const response = await axiosInstance.get("/product/findall");
-      if (response.data.success) {
-        const formattedProducts = response.data.data.map((product) => ({
+
+  
+
+
+  useEffect(()=>{
+  if(data?.data){
+     const formattedProducts = data?.data?.map((product) => ({
           ...product,
-          category: product.category?.name || "N/A",
+          category: product?.category?.name || "N/A",
         }));
         setProducts(formattedProducts);
-        console.log("products:  ", formattedProducts);
-      } else {
-        message.error(response.data.message || "Failed to fetch products.");
-      }
-    } catch (error) {
-      message.error(
-        error.response?.data?.message || "Error fetching products."
-      );
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  }
+  },[data])
 
   // Handle edit button click
   const handleEdit = (product) => {
@@ -63,19 +55,17 @@ const Products = () => {
       okText: "Yes, Delete",
       okType: "danger",
       cancelText: "Cancel",
+      
       onOk: async () => {
         try {
-          const response = await axiosInstance.patch(`/product/delete/${id}`);
-          if (response.data.success) {
+          const response = await deleteProduct(id).unwrap();
+          if (response?.data?.success) {
             message.success("Product deleted successfully.");
-            fetchProducts();
           } else {
             message.error(response.data.message || "Failed to delete product.");
           }
         } catch (error) {
-          message.error(
-            error.response?.data?.message || "Error deleting product."
-          );
+          getError(error)
         }
       },
     });
@@ -121,22 +111,15 @@ const Products = () => {
 
   
     try {
-      const response = await axiosInstance.patch(
-        `/product/update/${editProduct.id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await updateProduct({id:editProduct?.id,data:formData}).unwrap();
+        
 
-      if (response.data.success) {
         message.success("Product updated successfully.");
-        fetchProducts();
         setIsEditModalOpen(false);
-      } else {
-        message.error(response.data.message || "Failed to update product.");
-      }
+      
     } catch (error) {
       console.error(error);
-      message.error(error.response?.data?.message || "Error updating product.");
+      getError(error)
     }
   };
 
@@ -231,6 +214,7 @@ const Products = () => {
             key: product.id,
           }))}
           pagination={false}
+          loading={isLoading}
         />
       </div>
 
@@ -241,6 +225,9 @@ const Products = () => {
         onCancel={() => setIsEditModalOpen(false)}
         centered
         maskClosable={false}
+        okButtonProps={{
+          loading: updateLoading
+        }}
       >
         <div className="flex flex-col gap-4">
           <label>Product Name:</label>
@@ -250,15 +237,15 @@ const Products = () => {
             onChange={handleEditChange}
           />
 
-          <label>Price:</label>
+          {/* <label>Price:</label>
           <Input
             name="price"
             type="number"
             value={editProduct?.price}
             onChange={handleEditChange}
-          />
+          /> */}
 
-          <label>Discount Percentage:</label>
+          {/* <label>Discount Percentage:</label>
           <Input
             name="discount_percentage"
             type="number"
@@ -266,15 +253,15 @@ const Products = () => {
             max={100}
             value={editProduct?.discount_percentage}
             onChange={handleEditChange}
-          />
+          /> */}
 
-          <label>Discounted Price:</label>
+          {/* <label>Discounted Price:</label>
           <Input
             name="discounted_price"
             value={editProduct?.discounted_price}
             disabled
             style={{ cursor: "not-allowed" }}
-          />
+          /> */}
 
           <label>Total Quantity:</label>
           <Input

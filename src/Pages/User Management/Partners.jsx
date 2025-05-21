@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { Table, Modal, Input, Button, Upload } from "antd";
 import { FiEdit, FiTrash, FiEye } from "react-icons/fi";
 import { UploadOutlined } from "@ant-design/icons";
-import defaultProfile from "../../assets/Images/profile (1).png";
 import { useNavigate } from "react-router-dom";
-import { useGetUserQuery } from "../../redux/slices/apiSlice";
+import { useGetPartnersQuery } from "../../redux/slices/apiSlice";
 
 
-const Users = () => {
+const Partners = () => {
   const [users, setUsers] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
@@ -16,7 +15,7 @@ const Users = () => {
   const [limit,setLimit] = useState(10);
 
 
-  const {data,isFetching} = useGetUserQuery({page:currentPage,limit});
+  const {data,isFetching} = useGetPartnersQuery({page:currentPage,limit});
 
 
   
@@ -120,7 +119,7 @@ const Users = () => {
           <FiEye
             className="cursor-pointer text-green-500"
             size={18}
-            onClick={() => navigate("/profile", { state: { user: record } })}
+            onClick={() => navigate(`/users/profile/${record?.id}`, { state: { user: record } })}
           />
           <FiEdit
             className="cursor-pointer text-blue-500"
@@ -142,7 +141,7 @@ const Users = () => {
       <div className="p-4">
       <Table
   columns={columns}
-  dataSource={data?.data?.data?.map((user) => ({ ...user, key: user?.id }))}
+  dataSource={data?.data?.map((user) => ({ ...user, key: user?.id }))}
   pagination={{
     current: currentPage,
     pageSize: limit,
@@ -202,4 +201,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Partners;

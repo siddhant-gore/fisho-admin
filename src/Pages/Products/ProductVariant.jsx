@@ -1,40 +1,33 @@
 import { useState, useEffect } from "react";
 import { Table, Modal, Input, Button, message, Upload } from "antd";
-import { useAxiosInstance } from "../../AxiosInstance";
 import { FiEdit, FiTrash, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
+import { useDeleteProductVariantByIdMutation, useGetAllProductVariantsQuery, useUpdateProductVariantByIdMutation } from "../../redux/slices/apiSlice";
 
 const ProductVariants = () => {
   const [variants, setVariants] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editVariant, setEditVariant] = useState(null);
   const [imageList, setImageList] = useState([]);
-  const axiosInstance = useAxiosInstance();
   const navigate = useNavigate();
 
-  // Fetch product variants from backend
-  const fetchVariants = async () => {
-    try {
-      const response = await axiosInstance.get("/product-variant/findall");
-      console.log(response);
-      if (response.data.success) {
-        setVariants(response.data.data);
-      } else {
-        message.error(
-          response.data.message || "Failed to fetch product variants."
-        );
-      }
-    } catch (error) {
-      message.error(
-        error.response?.data?.message || "Error fetching product variants."
-      );
-    }
-  };
+  const {data,isLoading} = useGetAllProductVariantsQuery();
+  const [updateProductVariant,{isLoading:updateLoading}] = useUpdateProductVariantByIdMutation();
+  const [deleteProductVariant,{isLoading:deleteLoading}] = useDeleteProductVariantByIdMutation();
 
-  useEffect(() => {
-    fetchVariants();
-  }, []);
+  // Fetch product variants from backend
+
+  useEffect(()=>{
+    if(data){
+     setVariants(data?.data);
+
+    }
+  },[data])
+
+  
+
+  
 
   // Handle edit button click
   const handleEdit = (variant) => {
@@ -103,21 +96,12 @@ const ProductVariants = () => {
     }
 
     try {
-      const response = await axiosInstance.patch(
-        `/product-variant/update/${editVariant.id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const data = await updateProductVariant({id:editVariant,data:formData}).unwrap();
+      
 
-      if (response.data.success) {
         message.success("Product variant updated successfully.");
-        fetchVariants();
         setIsEditModalOpen(false);
-      } else {
-        message.error(
-          response.data.message || "Failed to update product variant."
-        );
-      }
+     
     } catch (error) {
       message.error(
         error.response?.data?.message || "Error updating product variant."
@@ -132,17 +116,13 @@ const ProductVariants = () => {
       okText: "Yes, Delete",
       okType: "danger",
       cancelText: "Cancel",
+      
       onOk: async () => {
         try {
-          const response = await axiosInstance.patch(
-            `/product-variant/delete/${id}`
-          );
-          if (response.data.success) {
+          const data = await deleteProductVariant(id).unwrap();
+         
             message.success("Product deleted successfully.");
-            fetchVariants();
-          } else {
-            message.error(response.data.message || "Failed to delete product.");
-          }
+          
         } catch (error) {
           message.error(
             error.response?.data?.message || "Error deleting product."
@@ -234,6 +214,7 @@ const ProductVariants = () => {
 
       <div className="p-4">
         <Table
+        loading={isLoading}
           columns={columns}
           dataSource={variants.map((variant) => ({
             ...variant,
@@ -287,7 +268,7 @@ const ProductVariants = () => {
           <Input
             name="totalQuantity"
             type="number"
-            value={editVariant?.totalQuantity || ""}
+            value={editVariant?.quantity || ""}
             onChange={handleEditChange}
           />
 

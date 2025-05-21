@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { Select, Input, Button, Form, message, Checkbox, Spin } from "antd";
-import { useAxiosInstance } from "../../AxiosInstance"; // Custom Axios instance
+import { useAddProductToStoreMutation, useGetAllProductsQuery, useGetAllStoresQuery, useGetAllVariantsByProductMutation } from "../../redux/slices/apiSlice";
 
 export default function AddProductToStore() {
-  const axiosInstance = useAxiosInstance(); // Use custom Axios instance
 
   const [storeOptions, setStoreOptions] = useState([]);
   const [productOptions, setProductOptions] = useState([]);
   const [variantOptions, setVariantOptions] = useState([]);
-  const [loadingStores, setLoadingStores] = useState(true);
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [loadingVariants, setLoadingVariants] = useState(false);
+  
+  const [availableQuantity,setAvailableQuantity] = useState(100)
 
-  const availableQuantity = 100;
   const [formData, setFormData] = useState({
     storeId: "",
     product_variantId: "",
@@ -21,59 +18,60 @@ export default function AddProductToStore() {
     availability: false,
   });
 
-  // Fetch stores from API
-  useEffect(() => {
-    axiosInstance
-      .get("/stores/findall")
-      .then((res) => {
-        const stores = res.data.data.map((store) => ({
-          label: store.name,
-          value: store.id,
+
+  const {data:storesData,isLoading:storeLoading} = useGetAllStoresQuery();
+  const {data:productsData,isLoading:productLoading} = useGetAllProductsQuery();
+  const [addProductToStore,{isLoading}] = useAddProductToStoreMutation();
+
+
+  const [variantByproduct, {isLoading:variantLoading}] = useGetAllVariantsByProductMutation()
+
+  
+  useEffect(()=>{
+      if(storesData){
+        const stores = storesData?.data?.map((store) => ({
+          label: store?.name,
+          value: store?.id,
         }));
         setStoreOptions(stores);
-      })
-      .catch((error) => {
-        console.error("Error fetching stores:", error);
-      })
-      .finally(() => setLoadingStores(false));
-  }, [axiosInstance]);
+      }
+  },[storesData])
 
-  // Fetch products from API
-  useEffect(() => {
-    axiosInstance
-      .get("/product/findall")
-      .then((res) => {
-        const products = res.data.data.map((product) => ({
-          label: product.name,
-          value: product.id,
+  
+  useEffect(()=>{
+      if(productsData){
+           const products = productsData?.data?.map((product) => ({
+          label: product?.name,
+          value: product?.id,
         }));
         setProductOptions(products);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      })
-      .finally(() => setLoadingProducts(false));
-  }, [axiosInstance]);
+      }
+  },[productsData])
 
-  // Fetch product variants when a product is selected
-  const handleProductChange = (productId) => {
-    setFormData((prev) => ({ ...prev, product_variantId: "" })); // Reset variant
+ 
+
+  const handleProductChange = async (productId) => {
+    setFormData((prev) => ({ ...prev, product_variantId: "" })); 
     setVariantOptions([]);
-    setLoadingVariants(true);
 
-    axiosInstance
-      .get(`/product-variant/find-by-product/${productId}`)
-      .then((res) => {
-        const variants = res.data.data.map((variant) => ({
-          label: variant.name,
-          value: variant.id,
+    try {
+        const data = await variantByproduct(productId).unwrap();
+
+        const variants = data?.data?.map((variant) => ({
+          label: variant?.name,
+          value: variant?.id,
+          quantity: variant?.quantity
         }));
         setVariantOptions(variants);
-      })
-      .catch((error) => {
-        console.error("Error fetching product variants:", error);
-      })
-      .finally(() => setLoadingVariants(false));
+      
+    } catch (error) {
+     console.error("Error fetching product variants:", error);
+
+    }
+
+   
+    
+   
   };
 
   const handleSubmit = async (e) => {
@@ -101,7 +99,8 @@ export default function AddProductToStore() {
     }
 
     try {
-      await axiosInstance.post("/store-product/add", form);
+      await addProductToStore(form).unwrap();
+
       message.success("Product added to store successfully!");
     } catch (error) {
       if (error.response) {
@@ -121,7 +120,7 @@ export default function AddProductToStore() {
         </div>
         <form onSubmit={handleSubmit} className="p-4">
           <Form.Item label="Store Name" className="text-gray-800 font-bold">
-            {loadingStores ? (
+            {storeLoading ? (
               <Spin />
             ) : (
               <Select
@@ -136,7 +135,7 @@ export default function AddProductToStore() {
           </Form.Item>
 
           <Form.Item label="Product Name" className="text-gray-800 font-bold">
-            {loadingProducts ? (
+            {productLoading ? (
               <Spin />
             ) : (
               <Select
@@ -152,17 +151,20 @@ export default function AddProductToStore() {
             label="Product Variant"
             className="text-gray-800 font-bold"
           >
-            {loadingVariants ? (
+            {variantLoading ? (
               <Spin />
             ) : (
               <Select
                 placeholder="Select Variant"
                 className="w-full"
-                onChange={(value) =>
+                onChange={(value,quantity) =>{
                   setFormData((prev) => ({ ...prev, product_variantId: value }))
+                  // setAvailableQuantity()
+                  console.log(value,quantity);
+                }
                 }
                 options={variantOptions}
-                disabled={!variantOptions.length}
+                disabled={!variantOptions?.length}
               />
             )}
           </Form.Item>

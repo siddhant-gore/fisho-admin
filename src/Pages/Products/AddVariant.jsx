@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Input, Select, Upload, Button, Form, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useAxiosInstance } from "../../AxiosInstance";
+import { useCreateProductVariantMutation, useGetAllProductsQuery } from "../../redux/slices/apiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function AddVariant() {
   const [products, setProducts] = useState([]);
@@ -19,26 +21,22 @@ export default function AddVariant() {
 
   const axiosInstance = useAxiosInstance();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axiosInstance.get("/product/findall");
-        if (response.data.success && Array.isArray(response.data.data)) {
-          setProducts(
-            response.data.data.map((product) => ({
-              label: product.name,
-              value: product.id,
+  const {data} = useGetAllProductsQuery();
+  const [createProductVariant] = useCreateProductVariantMutation();
+   const navigate = useNavigate();
+
+useEffect(()=>{
+  if(data?.data){
+     setProducts(
+            data?.data?.map((product) => ({
+              label: product?.name,
+              value: product?.id,
             }))
           );
-        } else {
-          message.error("Invalid response format");
-        }
-      } catch (error) {
-        message.error("Failed to fetch products", error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  }
+},[data])
+
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -97,8 +95,11 @@ export default function AddVariant() {
       for (let pair of formData.entries()) {
         console.log(`${pair[0]}:`, pair[1]);
       }
-      await axiosInstance.post("/product-variant/add", formData);
+
+      await createProductVariant(formData).unwrap()
+
       message.success("Variant added successfully!");
+      navigate(-1)
     } catch (error) {
       if (error.response) {
         message.error(error.response.data.message || "Failed to add variant.");

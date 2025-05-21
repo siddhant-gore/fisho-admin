@@ -28,10 +28,10 @@ const sampleOrders = [
   },
 ];
 
-const ProfileCard = () => {
+const ProfileCard = ({user}) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const user = location.state?.user; // Get user data from navigation state
+  // const user = location.state?.user; 
 
   // Order Table Columns
   const columns = [
@@ -66,6 +66,9 @@ const ProfileCard = () => {
     },
   ];
 
+
+  console.log(user)
+
   return (
     <div>
       {/* Tabs at the Top */}
@@ -89,10 +92,10 @@ const ProfileCard = () => {
               >
                 <Meta
                   className="text-center"
-                  title={user.name}
+                  title={user?.firstname + ' '+ user?.lastname}
                   description={user.email}
                 />
-                <p className="mt-2 text-center">📞 {user.phone}</p>
+                <p className="mt-2 text-center">📞 {user?.phone_no}</p>
                 <p className="text-center">📅 Joined on {user.createdAt}</p>
               </Card>
             ) : (

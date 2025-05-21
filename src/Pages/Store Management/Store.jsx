@@ -1,35 +1,30 @@
 import { useState, useEffect } from "react";
 import { Table, Modal, Input, Button, Upload, message } from "antd";
-import { useAxiosInstance } from "../../AxiosInstance";
 import { FiEdit, FiTrash, FiEye } from "react-icons/fi";
 import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useDeleteStoreByIdMutation, useGetAllStoresQuery, useUpdateStoreByIdMutation } from "../../redux/slices/apiSlice";
 
 const Stores = () => {
   const [stores, setStores] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editStore, setEditStore] = useState(null);
   const [imageList, setImageList] = useState([]);
-  const axiosInstance = useAxiosInstance();
   const navigate = useNavigate();
 
-  // Fetch stores from backend
-  const fetchStores = async () => {
-    try {
-      const response = await axiosInstance.get("/stores/findall");
-      if (response.data.success) {
-        setStores(response.data.data);
-      } else {
-        message.error(response.data.message || "Failed to fetch stores.");
-      }
-    } catch (error) {
-      message.error(error.response?.data?.message || "Error fetching stores.");
-    }
-  };
+  const {data} = useGetAllStoresQuery();
+  const [deleteStoreById,{isLoading:deleteLoading}] = useDeleteStoreByIdMutation();
+  const [updateStoreById,{isLoading:updateLoading}] = useUpdateStoreByIdMutation()
 
-  useEffect(() => {
-    fetchStores();
-  }, []);
+  
+  useEffect(()=>{
+    if(data?.data){
+        setStores(data?.data);
+
+    }
+  },[data])
+
+  
 
   // Handle edit button click
   const handleEdit = (store) => {
@@ -59,13 +54,8 @@ const Stores = () => {
       cancelText: "Cancel",
       onOk: async () => {
         try {
-          const response = await axiosInstance.patch(`/stores/delete/${id}`);
-          if (response.data.success) {
-            message.success("Store deleted successfully.");
-            fetchStores();
-          } else {
-            message.error(response.data.message || "Failed to delete store.");
-          }
+          const data = await deleteStoreById(id).unwrap();
+          
         } catch (error) {
           message.error(
             error.response?.data?.message || "Error deleting store."
@@ -97,21 +87,13 @@ const Stores = () => {
     }
 
     try {
-      const response = await axiosInstance.patch(
-        `/stores/update/${editStore.id}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
 
-      if (response.data.success) {
+      const data = await updateStoreById({id:editStore?.id,data:formData})
+
+     
         message.success("Store updated successfully.");
-        fetchStores();
         setIsEditModalOpen(false);
-      } else {
-        message.error(response.data.message || "Failed to update store.");
-      }
+     
     } catch (error) {
       message.error(error.response?.data?.message || "Error updating store.");
     }

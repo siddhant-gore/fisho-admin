@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Input, Upload, Button, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
-import { useAxiosInstance } from "../../AxiosInstance";
+import { useCreateStoreMutation } from "../../redux/slices/apiSlice";
 
 export default function AddStore() {
   const [fileList, setFileList] = useState([]);
-  const axiosInstance = useAxiosInstance();
+
+  const [createStore,{isLoading:createLoading}] = useCreateStoreMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -63,17 +64,13 @@ export default function AddStore() {
       }
 
       try {
-        const response = await axiosInstance.post("/stores/add", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        
+        const data = await createStore(formData).unwrap();
 
-        if (response.data.success) {
           message.success("Store added successfully!");
           formik.resetForm();
           setFileList([]);
-        } else {
-          message.error(response.data.message || "Failed to add store.");
-        }
+      
       } catch (error) {
         message.error(error.response?.data?.message || "Error adding store.");
       }

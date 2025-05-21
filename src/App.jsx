@@ -6,7 +6,6 @@ import Products from "./Pages/Products/Products";
 import ProductVariants from "./Pages/Products/ProductVariant";
 import AddProducts from "./Pages/Products/AddProducts";
 import AddVariant from "./Pages/Products/AddVariant";
-import Users from "./Pages/Users/ViewUsers";
 import ProfileCard from "./Components/Cards/ProfileCard";
 import ProductCard from "./Components/Cards/ProductCard";
 import Stores from "./Pages/Store Management/Store";
@@ -25,6 +24,9 @@ import Layout from "./Components/Layout/Layout";
 import Orders from "./Pages/Order Management/Orders";
 import ViewOrder from "./Pages/Order Management/ViewOrder";
 import Banner from "./Pages/Content Management/Banner";
+import Partners from "./Pages/User Management/Partners";
+import Users from "./Pages/User Management/Users";
+import ViewUsers from "./Pages/User Management/ViewUsers";
 
 function App() {
   return (
@@ -41,13 +43,14 @@ function App() {
         <Route path="/add-products" element={<AddProducts />} />
         <Route path="/add-product-variant" element={<AddVariant />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/partners" element={<Partners />} />
         <Route path="/content/banners" element={<Banner />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/orders/view/:id" element={<ViewOrder />} />
 
         <Route path="/bulk-orders" element={<BulkOrders />} />
         <Route path="/bulk-orders/view/:id" element={<ViewBulkOrder />} />
-        <Route path="/profile" element={<ProfileCard />} />
+        <Route path="/users/profile/:id" element={<ViewUsers/>} />
         <Route path="/product-card" element={<ProductCard />} />
         <Route path="/stores" element={<Stores />} />
         <Route path="/store-details" element={<StoreCard />} />

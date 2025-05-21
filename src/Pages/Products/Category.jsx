@@ -4,6 +4,7 @@ import { useAxiosInstance } from "../../AxiosInstance";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import { PlusOutlined } from "@ant-design/icons";
 import defaultImage from "../../assets/Images/trout-underwater-260nw-130186676.webp"; // Default category image
+import { useCreateCategoryMutation, useDeleteCategoryByIdMutation, useGetAllCategoriesQuery, useUpdateCategoryByIdMutation } from "../../redux/slices/apiSlice";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -17,28 +18,22 @@ const Categories = () => {
     imagePreview: "",
   });
 
-  // Memoize axios instance to avoid re-renders
-  const axiosInstance = useAxiosInstance(); // Call the hook directly
+
+  const {data,isLoading} = useGetAllCategoriesQuery();
+  const [createCategory,{isLoading:createLoading}] = useCreateCategoryMutation();
+  const [updateCategory,{isLoading:updateLoading}] = useUpdateCategoryByIdMutation();
+  const [deleteCategory,{isLoading:deleteLoading}] = useDeleteCategoryByIdMutation();
 
   // Fetch categories from backend
-  const fetchCategories = async () => {
-    try {
-      const response = await axiosInstance.get("/category/findall");
-      if (response.data.success) {
-        setCategories(response.data.data);
-      } else {
-        message.error(response.data.message || "Failed to fetch categories.");
-      }
-    } catch (error) {
-      message.error(
-        error.response?.data?.message || "Error fetching categories."
-      );
-    }
-  };
 
-  useEffect(() => {
-    fetchCategories();
-  }, []); // No axiosInstance dependency here
+  useEffect(()=>{
+ if(data?.data){
+      setCategories(data?.data);
+
+ }
+  },[data])
+
+
 
   // Handle edit button click
   const handleEdit = (category) => {
@@ -68,18 +63,13 @@ const Categories = () => {
     }
 
     try {
-      const response = await axiosInstance.patch(
-        `/category/update/${editCategory.id}`,
-        formData
-      );
 
-      if (response.data.success) {
-        fetchCategories(); // Refetch after update
+      const data = await updateCategory({id:editCategory?.id,data:formData}).unwrap();
+
+     
         message.success("Category updated successfully!");
         setIsEditModalOpen(false);
-      } else {
-        message.error(response.data.message || "Failed to update category.");
-      }
+    
     } catch (error) {
       message.error(
         error.response?.data?.message || "Error updating category."
@@ -125,14 +115,11 @@ const Categories = () => {
     }
 
     try {
-      const response = await axiosInstance.post("/category/add", formData);
-      if (response.data.success) {
+      const data = await createCategory(formData).unwrap();
+   
         message.success("Category added successfully!");
-        fetchCategories(); // Refetch after adding
         handleModalClose();
-      } else {
-        message.error(response.data.message || "Failed to add category.");
-      }
+    
     } catch (error) {
       message.error(error.response?.data?.message || "Error adding category.");
     }
@@ -147,15 +134,12 @@ const Categories = () => {
       cancelText: "Cancel",
       onOk: async () => {
         try {
-          const response = await axiosInstance.patch(`/category/delete/${id}`);
-          if (response.status === 200) {
-            await fetchCategories();
+          const data = await deleteCategory(id).unwrap();
+       
             message.success(
-              response.data.message || "Category deleted successfully."
+              data.message || "Category deleted successfully."
             );
-          } else {
-            message.error("Failed to delete category.");
-          }
+          
         } catch (error) {
           message.error(
             error.response?.data?.message || "Error deleting category."
@@ -224,6 +208,7 @@ const Categories = () => {
 
       <div className="p-4">
         <Table
+          loading={isLoading}
           columns={columns}
           dataSource={categories.map((category) => ({
             ...category,

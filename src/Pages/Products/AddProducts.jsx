@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Input, Upload, Button, Checkbox, message, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { useAxiosInstance } from "../../AxiosInstance";
 import * as Yup from "yup";
+import { useCreateProductMutation, useGetAllCategoriesQuery } from "../../redux/slices/apiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function AddProducts() {
   const [categories, setCategories] = useState([]);
@@ -20,23 +21,19 @@ export default function AddProducts() {
     nutritional_facts: "",
   });
 
-  const axiosInstance = useAxiosInstance();
+  const navigate  = useNavigate();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axiosInstance.get("/category/findall");
-        if (response.data.success) {
-          setCategories(response.data.data);
-        } else {
-          message.error(response.data.message || "Failed to fetch categories.");
-        }
-      } catch (error) {
-        message.error(error.message || "Error fetching categories.");
-      }
-    };
-    fetchCategories();
-  }, []);
+  const {data:categoryData} = useGetAllCategoriesQuery();
+  const [createProduct] = useCreateProductMutation();
+
+  
+
+  useEffect(()=>{
+   if(categoryData?.data){
+              setCategories(categoryData?.data);
+
+   }
+  },[categoryData])
 
   const calculateDiscountedPrice = (price, discount) => {
     if (!price || isNaN(price) || !discount || isNaN(discount)) return "";
@@ -47,12 +44,12 @@ export default function AddProducts() {
     const schema = Yup.object({
       name: Yup.string().required("Product name is required"),
       categoryId: Yup.string().required("Category is required"),
-      price: Yup.number()
-        .required("Price is required")
-        .positive("Price must be positive"),
-      discount_percentage: Yup.number()
-        .min(0)
-        .max(100, "Discount cannot exceed 100%"),
+      // price: Yup.number()
+      //   .required("Price is required")
+      //   .positive("Price must be positive"),
+      // discount_percentage: Yup.number()
+      //   .min(0)
+      //   .max(100, "Discount cannot exceed 100%"),
       quantity: Yup.number()
         .required("Quantity is required")
         .positive("Must be a positive number"),
@@ -95,11 +92,10 @@ export default function AddProducts() {
     }
 
     try {
-      const response = await axiosInstance.post("/product/add", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
 
-      if (response.data.success) {
+      const data = await createProduct(formData).unwrap();
+     
+
         message.success("Product added successfully.");
         setFormValues({
           name: "",
@@ -114,9 +110,8 @@ export default function AddProducts() {
         });
         setFileList([]);
         setDiscountedPrice("");
-      } else {
-        message.error(response.data.message || "Failed to add product.");
-      }
+        navigate(-1);
+        
     } catch (error) {
       message.error(error.response?.data?.message || "Error adding product.");
     }
@@ -212,7 +207,7 @@ export default function AddProducts() {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="font-bold">Price</label>
             <Input
               name="price"
@@ -232,12 +227,12 @@ export default function AddProducts() {
               onChange={handleInputChange}
               placeholder="Enter discount percentage"
             />
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <label className="font-bold">Discounted Price</label>
             <Input value={discountedPrice} readOnly className="bg-gray-200" />
-          </div>
+          </div> */}
 
           <div>
             <label className="font-bold">Total Quantity</label>
