@@ -3,79 +3,127 @@ import { Input, Upload, Button, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import { useCreateStoreMutation } from "../../redux/slices/apiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function AddStore() {
   const [fileList, setFileList] = useState([]);
 
   const [createStore,{isLoading:createLoading}] = useCreateStoreMutation();
 
+  const navigate = useNavigate();
+
   const formik = useFormik({
-    initialValues: {
-      storeName: "",
-      storeAddress: "",
-      storePhone: "",
+  initialValues: {
+    user: {
+      email: "",
+      password: "",
+      firstname: "",
+      lastname: "",
+      phone_no: "",
+      addresses: {
+        houseName: "",
+        houseNumber: "",
+        flatNumber: "",
+        address: ""
+      }
+    },
+    store: {
+      name: "",
+      address: "",
+      phone_number: "",
       latitude: "",
       longitude: "",
-      storeImage: null,
-    },
-    validate: (values) => {
-      let errors = {};
+      // image: null
+    }
+  },
+//   validate: (values) => {
+//   const errors = {};
+//   const { user, store } = values;
 
-      if (!values.storeName) errors.storeName = "Store name is required";
-      if (!values.storeAddress)
-        errors.storeAddress = "Store address is required";
+//   // Initialize nested objects
+//   errors.user = {};
+//   errors.store = {};
+//   errors.user.addresses = {};
 
-      if (!values.storePhone) {
-        errors.storePhone = "Phone number is required";
-      } else if (!/^\d{10}$/.test(values.storePhone)) {
-        errors.storePhone = "Enter a valid 10-digit phone number";
+//   // ---- Store Validations ----
+//   if (!store.name) errors.store.name = "Store name is required";
+//   if (!store.address) errors.store.address = "Store address is required";
+//   if (!store.phone_number || !/^\d{10}$/.test(store.phone_number)) {
+//     errors.store.phone_number = "Valid phone number required";
+//   }
+//   if (!store.latitude || isNaN(Number(store.latitude))) {
+//     errors.store.latitude = "Latitude must be a number";
+//   }
+//   if (!store.longitude || isNaN(Number(store.longitude))) {
+//     errors.store.longitude = "Longitude must be a number";
+//   }
+//   if (!store.image) {
+//     errors.store.image = "Store image is required";
+//   }
+
+//   // ---- User Validations ----
+//   if (!user.email) errors.user.email = "Email is required";
+//   if (!user.password) errors.user.password = "Password is required";
+//   if (!user.firstname) errors.user.firstname = "First name is required";
+//   if (!user.lastname) errors.user.lastname = "Last name is required";
+//   if (!user.phone_no || !/^\d{10}$/.test(user.phone_no)) {
+//     errors.user.phone_no = "Valid phone number required";
+//   }
+
+//   // ---- Address Validations ----
+//   if (!user.addresses.houseName) errors.user.addresses.houseName = "House name required";
+//   if (!user.addresses.houseNumber) errors.user.addresses.houseNumber = "House number required";
+//   if (!user.addresses.flatNumber) errors.user.addresses.flatNumber = "Flat number required";
+//   if (!user.addresses.address) errors.user.addresses.address = "Address is required";
+
+//   return errors;
+// },
+
+ onSubmit: async (values) => {
+  try {
+
+    console.log('values',values)
+
+    const payload = {
+      user: {
+        email: values.user.email,
+        password: values.user.password,
+        firstname: values.user.firstname,
+        lastname: values.user.lastname,
+        phone_no: values.user.phone_no,
+        addresses: {
+          houseName: values.user.addresses.houseName,
+          houseNumber: values.user.addresses.houseNumber,
+          flatNumber: values.user.addresses.flatNumber,
+          address: values.user.addresses.address,
+        }
+      },
+      store: {
+        name: values.storeName,
+        address: values.storeAddress,
+        phone_number: values.storePhone,
+        latitude: parseFloat(values.latitude),
+        longitude: parseFloat(values.longitude),
+        // image: values.store.image 
       }
+    };
 
-      if (!values.latitude) {
-        errors.latitude = "Latitude is required";
-      } else if (!/^-?\d+(\.\d+)?$/.test(values.latitude)) {
-        errors.latitude = "Enter a valid numeric latitude";
-      }
+    // Send as raw JSON
+    const response = await createStore(payload).unwrap();
 
-      if (!values.longitude) {
-        errors.longitude = "Longitude is required";
-      } else if (!/^-?\d+(\.\d+)?$/.test(values.longitude)) {
-        errors.longitude = "Enter a valid numeric longitude";
-      }
+    message.success("Store and user added successfully!");
+    formik.resetForm();
+    setFileList([]);
+    navigate(-1)
 
-      if (!values.storeImage) errors.storeImage = "Image is required";
+  } catch (error) {
+    console.error(error);
+    message.error(error?.data?.message || "Error creating store");
+  }
+}
 
-      return errors;
-    },
-    onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("name", values.storeName);
-      formData.append("address", values.storeAddress);
-      formData.append("phone_number", values.storePhone);
-      formData.append("latitude", values.latitude);
-      formData.append("longitude", values.longitude);
-      if (values.storeImage) {
-        formData.append("image", values.storeImage);
-      }
+});
 
-      console.log("Submitting form data:");
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
-
-      try {
-        
-        const data = await createStore(formData).unwrap();
-
-          message.success("Store added successfully!");
-          formik.resetForm();
-          setFileList([]);
-      
-      } catch (error) {
-        message.error(error.response?.data?.message || "Error adding store.");
-      }
-    },
-  });
 
   const beforeUpload = (file) => {
     const isImage = file.type.startsWith("image/");
@@ -86,14 +134,15 @@ export default function AddStore() {
   };
 
   const handleImageUpload = ({ file, fileList }) => {
-    setFileList(fileList.slice(-1));
-    formik.setFieldValue("storeImage", file.originFileObj);
-  };
+  setFileList(fileList.slice(-1));
+  formik.setFieldValue("store.image", file.originFileObj);
+};
 
-  const handleRemoveImage = () => {
-    setFileList([]);
-    formik.setFieldValue("storeImage", null);
-  };
+const handleRemoveImage = () => {
+  setFileList([]);
+  formik.setFieldValue("store.image", null);
+};
+
 
   return (
     <div>
@@ -160,6 +209,81 @@ export default function AddStore() {
               value={formik.values.longitude}
             />
           </Form.Item>
+
+          <h3 className="font-bold">Subadmin User</h3>
+          <hr className="mb-3 "/>
+          <Form.Item label="User Email">
+  <Input
+    name="user.email"
+    onChange={formik.handleChange}
+    value={formik.values.user.email}
+  />
+</Form.Item>
+
+<Form.Item label="User Password">
+  <Input.Password
+    name="user.password"
+    onChange={formik.handleChange}
+    value={formik.values.user.password}
+  />
+</Form.Item>
+
+<Form.Item label="First Name">
+  <Input
+    name="user.firstname"
+    onChange={formik.handleChange}
+    value={formik.values.user.firstname}
+  />
+</Form.Item>
+
+<Form.Item label="Last Name">
+  <Input
+    name="user.lastname"
+    onChange={formik.handleChange}
+    value={formik.values.user.lastname}
+  />
+</Form.Item>
+
+<Form.Item label="User Phone Number">
+  <Input
+    name="user.phone_no"
+    onChange={formik.handleChange}
+    value={formik.values.user.phone_no}
+  />
+</Form.Item>
+
+<Form.Item label="House Name">
+  <Input
+    name="user.addresses.houseName"
+    onChange={formik.handleChange}
+    value={formik.values.user.addresses.houseName}
+  />
+</Form.Item>
+
+<Form.Item label="House Number">
+  <Input
+    name="user.addresses.houseNumber"
+    onChange={formik.handleChange}
+    value={formik.values.user.addresses.houseNumber}
+  />
+</Form.Item>
+
+<Form.Item label="Flat Number">
+  <Input
+    name="user.addresses.flatNumber"
+    onChange={formik.handleChange}
+    value={formik.values.user.addresses.flatNumber}
+  />
+</Form.Item>
+
+<Form.Item label="Full Address">
+  <Input
+    name="user.addresses.address"
+    onChange={formik.handleChange}
+    value={formik.values.user.addresses.address}
+  />
+</Form.Item>
+
 
           <Form.Item>
             <Button type="primary" htmlType="submit">

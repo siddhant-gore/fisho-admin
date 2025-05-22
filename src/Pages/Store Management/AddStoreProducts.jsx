@@ -8,11 +8,11 @@ export default function AddProductToStore() {
   const [productOptions, setProductOptions] = useState([]);
   const [variantOptions, setVariantOptions] = useState([]);
   
-  const [availableQuantity,setAvailableQuantity] = useState(100)
+  const [availableQuantity,setAvailableQuantity] = useState(0)
 
   const [formData, setFormData] = useState({
     storeId: "",
-    product_variantId: "",
+    product_variantId: null,
     quantity: "",
     express_del: false,
     availability: false,
@@ -99,9 +99,10 @@ export default function AddProductToStore() {
     }
 
     try {
-      await addProductToStore(form).unwrap();
+      await addProductToStore(formData).unwrap();
 
       message.success("Product added to store successfully!");
+      // setFormData({})
     } catch (error) {
       if (error.response) {
         message.error(error.response.data.message || "Failed to add product.");
@@ -154,18 +155,18 @@ export default function AddProductToStore() {
             {variantLoading ? (
               <Spin />
             ) : (
-              <Select
-                placeholder="Select Variant"
-                className="w-full"
-                onChange={(value,quantity) =>{
-                  setFormData((prev) => ({ ...prev, product_variantId: value }))
-                  // setAvailableQuantity()
-                  console.log(value,quantity);
-                }
-                }
-                options={variantOptions}
-                disabled={!variantOptions?.length}
-              />
+             <Select
+  placeholder="Select Variant"
+  className="w-full"
+  onChange={(value) => {
+    const selected = variantOptions.find((opt) => opt.value === value);
+    setFormData((prev) => ({ ...prev, product_variantId: value }));
+    setAvailableQuantity(selected?.quantity);
+  }}
+  options={variantOptions}
+  disabled={!variantOptions?.length}
+/>
+
             )}
           </Form.Item>
 
