@@ -27,6 +27,7 @@ import Banner from "./Pages/Content Management/Banner";
 import Partners from "./Pages/User Management/Partners";
 import Users from "./Pages/User Management/Users";
 import ViewUsers from "./Pages/User Management/ViewUsers";
+import ViewStore from "./Pages/Store Management/ViewStore";
 
 function App() {
   return (
@@ -53,7 +54,7 @@ function App() {
         <Route path="/users/profile/:id" element={<ViewUsers/>} />
         <Route path="/product-card" element={<ProductCard />} />
         <Route path="/stores" element={<Stores />} />
-        <Route path="/store-details" element={<StoreCard />} />
+        <Route path="/store-details/:id" element={<ViewStore />} />
         <Route path="/add-store" element={<AddStore />} />
         <Route path="/add-store-products" element={<AddStoreProducts />} />
         <Route path="/store-billing" element={<StoreBilling />} />

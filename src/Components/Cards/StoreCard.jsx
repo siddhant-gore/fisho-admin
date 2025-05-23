@@ -28,10 +28,10 @@ const sampleStoreProducts = [
   },
 ];
 
-const StoreCard = () => {
+const StoreCard = ({data}) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const store = location.state?.store; // Get store data from navigation state
+  const store = data; 
 
   // Store Products Table Columns
   const columns = [
@@ -58,7 +58,7 @@ const StoreCard = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (price) => `₹ ${price}`,
+      render: (price) => ` ${price}`,
     },
     {
       title: "Stock",
@@ -80,20 +80,28 @@ const StoreCard = () => {
                 style={{
                   width: "100%",
                 }}
+
                 cover={
-                  <img
+                 store?.image && <img
                     alt="Store"
-                    src={store.image}
+                    src={store?.image}
                     className="!w-64 h-64 rounded-md mx-auto mt-4"
                   />
                 }
               >
                 <Meta
                   className="text-center"
-                  title={store.name}
-                  description={store.address}
+                  title={store?.name}
+                  description={'📍 ' +  store.address}
                 />
-                <p className="mt-2 text-center">📞 {store.phone}</p>
+                <p className="mt-2 text-center">📞 {store?.phone_number}</p>
+                <h3 className="text-center font-bold mt-2">Store Manager:</h3>
+                <Meta
+                  className="text-center"
+                  title={store?.user?.firstname + ' ' + store?.user?.lastname}
+                  description={store?.user?.email}
+                  
+                />
               </Card>
             ) : (
               <p className="text-center text-red-500">No store selected.</p>

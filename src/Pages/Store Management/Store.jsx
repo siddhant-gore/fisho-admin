@@ -12,7 +12,7 @@ const Stores = () => {
   const [imageList, setImageList] = useState([]);
   const navigate = useNavigate();
 
-  const {data} = useGetAllStoresQuery();
+  const {data,isLoading} = useGetAllStoresQuery();
   const [deleteStoreById,{isLoading:deleteLoading}] = useDeleteStoreByIdMutation();
   const [updateStoreById,{isLoading:updateLoading}] = useUpdateStoreByIdMutation()
 
@@ -130,7 +130,7 @@ const Stores = () => {
             className="cursor-pointer text-green-500"
             size={18}
             onClick={() =>
-              navigate("/store-details", { state: { store: record } })
+              navigate(`/store-details/${record?.id}`, { state: { store: record } })
             }
           />
           <FiEdit
@@ -157,6 +157,7 @@ const Stores = () => {
       </div>
       <div className="p-4">
         <Table
+        loading={isLoading}
           columns={columns}
           dataSource={stores.map((store) => ({ ...store, key: store.id }))}
           pagination={false}
