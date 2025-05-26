@@ -4,6 +4,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import * as Yup from "yup";
 import { useCreateProductMutation, useGetAllCategoriesQuery } from "../../redux/slices/apiSlice";
 import { useNavigate } from "react-router-dom";
+import Radio from "antd/es/radio/radio";
 
 export default function AddProducts() {
   const [categories, setCategories] = useState([]);
@@ -15,8 +16,10 @@ export default function AddProducts() {
     price: "",
     discount_percentage: "",
     quantity: "",
-    seasonal: false,
+    featured: false,
     trending: false,
+    delivery_type:"Next-Day Delivery",
+
     description: "",
     nutritional_facts: "",
   });
@@ -26,7 +29,9 @@ export default function AddProducts() {
   const {data:categoryData} = useGetAllCategoriesQuery();
   const [createProduct] = useCreateProductMutation();
 
-  
+  useEffect(()=>{
+    console.log(formValues)
+  },[formValues])
 
   useEffect(()=>{
    if(categoryData?.data){
@@ -72,7 +77,7 @@ export default function AddProducts() {
 
     const formData = new FormData();
     Object.entries(formValues).forEach(([key, value]) => {
-      if (key === "seasonal" || key === "trending") {
+      if (key === "featured" || key === "trending") {
         formData.append(key, value ? "true" : "false");
       } else {
         formData.append(key, value);
@@ -103,8 +108,8 @@ export default function AddProducts() {
           price: "",
           discount_percentage: "",
           quantity: "",
-          seasonal: false,
-          trending: false,
+          featured: false,
+          bestSellers: false,
           description: "",
           nutritional_facts: "",
         });
@@ -247,23 +252,28 @@ export default function AddProducts() {
 
           <div>
             <Checkbox
-              name="seasonal"
-              checked={formValues.seasonal}
+              name="featured"
+              checked={formValues.featured}
               onChange={handleInputChange}
             >
-              Seasonal
+              Featured
             </Checkbox>
           </div>
 
           <div>
             <Checkbox
-              name="trending"
-              checked={formValues.trending}
+              name="bestSellers"
+              checked={formValues.bestSellers}
               onChange={handleInputChange}
             >
-              Trending
+              Best Sellers
             </Checkbox>
           </div>
+
+      
+        <p>Delivery Type</p>
+          <Radio name='delivery_type' checked={formValues?.delivery_type === "Express Delivery"} value="Express Delivery" onChange={handleInputChange}>Express Delivery</Radio>
+          <Radio name='delivery_type' checked={formValues?.delivery_type === "Next-Day Delivery"} value="Next-Day Delivery" onChange={handleInputChange}>Next-Day Delivery</Radio>
 
           <div>
             <label className="font-bold">Nutritional Facts</label>
