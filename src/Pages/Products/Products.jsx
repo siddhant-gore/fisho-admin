@@ -152,16 +152,16 @@ const Products = () => {
           "N/A"
         ),
     },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Discounted Price",
-      dataIndex: "discounted_price",
-      key: "discounted_price",
-    },
+    // {
+    //   title: "Price",
+    //   dataIndex: "price",
+    //   key: "price",
+    // },
+    // {
+    //   title: "Discounted Price",
+    //   dataIndex: "discounted_price",
+    //   key: "discounted_price",
+    // },
     {
       title: "Total Quantity",
       dataIndex: "quantity",

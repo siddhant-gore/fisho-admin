@@ -210,7 +210,11 @@ const handleSave = async () => {
                   description={order?.user?.email}
                 />
                 <p className="mt-2 text-center">📞 {order?.user?.phone_no}</p>
-                <p className="mt-2 text-center">📍 {order?.address?.address}</p>
+                <p className="mt-2 text-center">📍 Address</p>
+                <p className="my-0 text-center">House Name: {order?.address?.address?.houseName}</p>
+                <p className="my-0 text-center">House Number: {order?.address?.address?.houseNumber}</p>
+                <p className="my-0 text-center">Flat Number {order?.address?.address?.flatNumber}</p>
+                <p className="my-0 text-center">Address: {order?.address?.address?.address}</p>
 
 
                 <div className="text-center mx-auto">
