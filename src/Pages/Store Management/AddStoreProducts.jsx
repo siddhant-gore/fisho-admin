@@ -191,7 +191,7 @@ export default function AddProductToStore() {
             </span>
           </Form.Item>
 
-          <Form.Item>
+          {/* <Form.Item>
             <Checkbox
               checked={formData.express_del}
               onChange={(e) =>
@@ -217,7 +217,7 @@ export default function AddProductToStore() {
             >
               Available in Stock
             </Checkbox>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button

@@ -94,6 +94,10 @@ const Layout = ({ children }) => {
 
           <CollapsibleMenu icon={BiSolidBookContent} label="Content Management" menuKey="content">
             <MenuItem icon={() => <div />} label="Banners" path="/content/banners" />
+            
+          <MenuItem icon={()=><div/>} label="Privacy Policy" path="/privacy_policy" />
+          <MenuItem icon={()=><div/>} label="Terms & Conditions" path="/terms_conditions" />
+       
           </CollapsibleMenu>
 
           <CollapsibleMenu icon={IoStorefrontOutline} label="Stores Management" menuKey="stores">
@@ -102,8 +106,6 @@ const Layout = ({ children }) => {
             <MenuItem icon={() => <div />} label="Store Billing" path="/store-billing" />
           </CollapsibleMenu>
 
-          <MenuItem icon={SiGnuprivacyguard} label="Privacy Policy" path="/privacy_policy" />
-          <MenuItem icon={BsFileEarmarkRuled} label="Terms & Conditions" path="/terms_conditions" />
         </ul>
       </div>
 
