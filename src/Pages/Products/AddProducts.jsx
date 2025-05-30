@@ -175,7 +175,7 @@ export default function AddProducts() {
               className="w-full"
             >
               <Select.Option value="">Select Category</Select.Option>
-              {categories.map((cat) => (
+              {categories?.map((cat) => (
                 <Select.Option key={cat.id} value={cat.id}>
                   {cat.name}
                 </Select.Option>

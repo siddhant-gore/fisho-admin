@@ -161,7 +161,7 @@ const handleRemoveImage = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Store Image">
+          {/* <Form.Item label="Store Image">
             <Upload
               listType="picture-card"
               fileList={fileList}
@@ -172,7 +172,7 @@ const handleRemoveImage = () => {
             >
               {fileList.length < 1 && <UploadOutlined />}
             </Upload>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item label="Store Address">
             <Input.TextArea

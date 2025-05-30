@@ -216,7 +216,7 @@ const ProductVariants = () => {
         <Table
         loading={isLoading}
           columns={columns}
-          dataSource={variants.map((variant) => ({
+          dataSource={variants?.map((variant) => ({
             ...variant,
             key: variant.id,
           }))}

@@ -37,7 +37,7 @@ const Products = () => {
       discount_percentage: product.discount_percentage || 0,
     });
     setImageList(
-      product.images?.map((url, index) => ({
+      product?.images?.map((url, index) => ({
         uid: index,
         name: `image-${index + 1}`,
         status: "done",

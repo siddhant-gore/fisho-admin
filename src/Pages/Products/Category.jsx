@@ -210,12 +210,12 @@ const Categories = () => {
         <Table
           loading={isLoading}
           columns={columns}
-          dataSource={categories.map((category) => ({
+          dataSource={categories?.length > 0 && categories?.map((category) => ({
             ...category,
-            key: category.id,
+            key: category?.id,
           }))}
           pagination={false}
-          locale={{ emptyText: "No category added yet" }} // Custom message for empty array
+          locale={{ emptyText: "No category added yet" }} 
         />
       </div>
 

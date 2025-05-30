@@ -107,17 +107,17 @@ const Stores = () => {
       width: 60,
       render: (_, __, index) => index + 1,
     },
-    {
-      title: "Store Image",
-      dataIndex: "image",
-      key: "image",
-      render: (image) =>
-        image ? (
-          <img src={image} alt="Store" className="w-10 h-10 rounded-md" />
-        ) : (
-          "N/A"
-        ),
-    },
+    // {
+    //   title: "Store Image",
+    //   dataIndex: "image",
+    //   key: "image",
+    //   render: (image) =>
+    //     image ? (
+    //       <img src={image} alt="Store" className="w-10 h-10 rounded-md" />
+    //     ) : (
+    //       "N/A"
+    //     ),
+    // },
     { title: "Store Name", dataIndex: "name", key: "name" },
     { title: "Address", dataIndex: "address", key: "address" },
     { title: "Phone Number", dataIndex: "phone_number", key: "phone" },
@@ -159,7 +159,7 @@ const Stores = () => {
         <Table
         loading={isLoading}
           columns={columns}
-          dataSource={stores.map((store) => ({ ...store, key: store.id }))}
+          dataSource={stores?.map((store) => ({ ...store, key: store.id }))}
           pagination={false}
         />
       </div>

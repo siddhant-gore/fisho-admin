@@ -22,7 +22,7 @@ export default function ProductCard() {
             }}
             cover={
               <Carousel autoplay dotPosition="bottom" className="w-64 mx-auto">
-                {product.images?.map((image, index) => (
+                {product?.images?.map((image, index) => (
                   <div key={index} className="flex justify-center">
                     <img
                       alt={`${product.name} ${index + 1}`}
