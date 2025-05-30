@@ -42,6 +42,7 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/products-variant" element={<ProductVariants />} />
         <Route path="/add-products" element={<AddProducts />} />
+        <Route path="/edit-products/:id" element={<AddProducts />} />
         <Route path="/add-product-variant" element={<AddVariant />} />
         <Route path="/users" element={<Users />} />
         <Route path="/partners" element={<Partners />} />

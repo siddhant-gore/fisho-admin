@@ -83,9 +83,10 @@ const ProfileCard = ({user}) => {
                   width: "100%",
                 }}
                 cover={
+                   user?.profileImage &&     
                   <img
                     alt="Profile"
-                    src={user.profileImage}
+                    src={user?.profileImage}
                     className="!w-40 h-40 rounded-full mx-auto mt-4"
                   />
                 }

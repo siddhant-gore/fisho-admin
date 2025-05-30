@@ -244,7 +244,16 @@ const ProductVariants = () => {
           <Input
             name="price"
             type="number"
+            min={0}
             value={editVariant?.price || ""}
+            onChange={handleEditChange}
+          />
+          <label>Cost Price:</label>
+          <Input
+            name="internalCost"
+            type="number"
+            min={0}
+            value={editVariant?.internalCost || ""}
             onChange={handleEditChange}
           />
 

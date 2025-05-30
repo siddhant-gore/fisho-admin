@@ -4,6 +4,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import { useCreateStoreMutation } from "../../redux/slices/apiSlice";
 import { useNavigate } from "react-router-dom";
+import LocationPicker from "../../Components/LocationPicker";
 
 export default function AddStore() {
   const [fileList, setFileList] = useState([]);
@@ -190,6 +191,17 @@ const handleRemoveImage = () => {
             />
           </Form.Item>
 
+          <Form.Item label="Select location">
+              <LocationPicker
+                onLocationSelect={(loc) => {
+                  console.log(loc);
+                  formik.setFieldValue("latitude",loc?.lat)
+                  formik.setFieldValue("longitude",loc?.lng)
+                  // form.setFieldValue("address", loc.address);
+                }}
+              />
+         </Form.Item>
+
           <Form.Item label="Latitude">
             <Input
               name="latitude"
@@ -286,7 +298,7 @@ const handleRemoveImage = () => {
 
 
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" loading={createLoading} htmlType="submit">
               Submit
             </Button>
           </Form.Item>

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Input, Upload, Button, Checkbox, message, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import * as Yup from "yup";
-import { useCreateProductMutation, useGetAllCategoriesQuery } from "../../redux/slices/apiSlice";
-import { useNavigate } from "react-router-dom";
+import { useCreateProductMutation, useGetAllCategoriesQuery, useGetProductByIdQuery } from "../../redux/slices/apiSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import Radio from "antd/es/radio/radio";
 
 export default function AddProducts() {
@@ -13,7 +13,7 @@ export default function AddProducts() {
   const [formValues, setFormValues] = useState({
     name: "",
     categoryId: "",
-    price: "",
+    // price: "",
     discount_percentage: "",
     quantity: "",
     featured: false,
@@ -25,9 +25,22 @@ export default function AddProducts() {
   });
 
   const navigate  = useNavigate();
-
+  const {id} = useParams();
   const {data:categoryData} = useGetAllCategoriesQuery();
-  const [createProduct] = useCreateProductMutation();
+  const [createProduct,{isLoading:createLoading}] = useCreateProductMutation();
+  const {data,isLoading:getLoading} = useGetProductByIdQuery(id,{skip:!id});
+
+ useEffect(() => {
+  if (data) {
+    setFormValues((prev) => ({
+      ...data.data,
+      categoryId: data.data?.category?.id,
+    }));
+
+    setFileList(data?.data?.images)
+  }
+}, [data]);
+
 
   useEffect(()=>{
     console.log(formValues)
@@ -85,7 +98,7 @@ export default function AddProducts() {
     });
 
     // Add discounted price to FormData
-    formData.append("discounted_price", discountedPrice);
+    // formData.append("discounted_price", discountedPrice);
 
     fileList.forEach((file) => {
       formData.append("images", file);
@@ -244,6 +257,7 @@ export default function AddProducts() {
             <Input
               name="quantity"
               type="number"
+              min={0}
               value={formValues.quantity}
               onChange={handleInputChange}
               placeholder="Enter total quantity"
@@ -291,6 +305,7 @@ export default function AddProducts() {
               type="primary"
               htmlType="submit"
               className="w-full bg-[#0034BE]"
+              loading={createLoading}
             >
               Submit
             </Button>

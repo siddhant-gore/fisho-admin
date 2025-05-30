@@ -10,6 +10,7 @@ export default function AddVariant() {
   const [formValues, setFormValues] = useState({
     productId: "",
     name: "",
+    internalCost: "",
     price: "",
     weight: "",
     discount_percentage: "",
@@ -22,7 +23,7 @@ export default function AddVariant() {
   const axiosInstance = useAxiosInstance();
 
   const {data} = useGetAllProductsQuery();
-  const [createProductVariant] = useCreateProductVariantMutation();
+  const [createProductVariant,{isLoading:createLoading}] = useCreateProductVariantMutation();
    const navigate = useNavigate();
 
 useEffect(()=>{
@@ -71,6 +72,7 @@ useEffect(()=>{
     if (
       !formValues.productId ||
       !formValues.name ||
+      !formValues.internalCost ||
       !formValues.price ||
       !formValues.quantity ||
       !formValues.image ||
@@ -83,6 +85,7 @@ useEffect(()=>{
     const formData = new FormData();
     formData.append("productId", Number(formValues.productId));
     formData.append("name", formValues.name);
+    formData.append("internalCost", formValues.internalCost);
     formData.append("price", formValues.price);
     formData.append("weight", formValues.weight);
     formData.append("discount_percentage", formValues.discount_percentage);
@@ -167,6 +170,7 @@ useEffect(()=>{
             <Input
               name="weight"
               type="number"
+              min={0}
               placeholder="Enter weight"
               onChange={handleChange}
               value={formValues.weight}
@@ -177,11 +181,23 @@ useEffect(()=>{
             <Input
               type="number"
               name="price"
+              min={0}
               placeholder="Enter price"
               onChange={handleChange}
               value={formValues.price}
             />
           </Form.Item>
+          <Form.Item label="Cost Price" className="text-gray-800 font-bold">
+            <Input
+              type="number"
+              name="internalCost"
+              placeholder="Enter cost price"
+              min={0}
+              onChange={handleChange}
+              value={formValues.internalCost}
+            />
+          </Form.Item>
+         
 
           <div className="grid grid-cols-2 gap-4">
             <Form.Item
@@ -192,6 +208,7 @@ useEffect(()=>{
                 type="number"
                 name="discount_percentage"
                 placeholder="Enter discount"
+                min={0}
                 suffix="%"
                 onChange={handleChange}
                 value={formValues.discount_percentage}
@@ -214,6 +231,7 @@ useEffect(()=>{
             <Input
               name="quantity"
               type="number"
+              min={0}
               placeholder="Enter total quantity"
               onChange={handleChange}
               value={formValues.quantity}
@@ -225,6 +243,7 @@ useEffect(()=>{
               type="primary"
               className="w-full bg-[#0034BE] hover:bg-[#002A9E]"
               htmlType="submit"
+              loading={createLoading}
             >
               Submit
             </Button>

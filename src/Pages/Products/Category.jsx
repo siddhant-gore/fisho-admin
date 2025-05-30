@@ -261,6 +261,10 @@ const Categories = () => {
         title="Add Category"
         open={isAddModalOpen}
         onOk={handleSaveNew}
+        okButtonProps={{
+          loading: createLoading || updateLoading
+        }
+        }
         onCancel={handleModalClose}
       >
         <div className="flex flex-col gap-4">
@@ -282,7 +286,7 @@ const Categories = () => {
               <img
                 src={newCategory.imagePreview}
                 alt="Preview"
-                className="w-full h-full object-cover"
+                className="w-full h-full "
               />
             ) : (
               <div>

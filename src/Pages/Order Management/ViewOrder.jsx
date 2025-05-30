@@ -169,7 +169,17 @@ const handleSave = async () => {
     {
         title: "Product Name",
         key: "productName",
+        render: (_, record) => record?.product_variant?.product?.name,
+      },
+    {
+        title: "Product Variant Name",
+        key: "productVariantName",
         render: (_, record) => record?.product_variant?.name,
+      },
+    {
+        title: "Quantity",
+        key: "quantity",
+        render: (_, record) => record?.quantity,
       },
  
     //   {

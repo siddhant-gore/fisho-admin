@@ -12,7 +12,7 @@ export default function AddProductToStore() {
 
   const [formData, setFormData] = useState({
     storeId: "",
-    product_variantId: null,
+    product_variantId: [null],
     quantity: "",
     express_del: false,
     availability: false,
@@ -43,6 +43,7 @@ export default function AddProductToStore() {
            const products = productsData?.data?.map((product) => ({
           label: product?.name,
           value: product?.id,
+           quantity: product?.quantity
         }));
         setProductOptions(products);
       }
@@ -51,8 +52,10 @@ export default function AddProductToStore() {
  
 
   const handleProductChange = async (productId) => {
-    setFormData((prev) => ({ ...prev, product_variantId: "" })); 
-    setVariantOptions([]);
+     const selected = productOptions?.find((opt) => opt.value === productId);
+    setFormData((prev) => ({ ...prev, productId,product_variantId: [null] }));
+    setAvailableQuantity(selected?.quantity);
+
 
     try {
         const data = await variantByproduct(productId).unwrap();
@@ -60,7 +63,6 @@ export default function AddProductToStore() {
         const variants = data?.data?.map((variant) => ({
           label: variant?.name,
           value: variant?.id,
-          quantity: variant?.quantity
         }));
         setVariantOptions(variants);
       
@@ -112,6 +114,10 @@ export default function AddProductToStore() {
     }
   };
 
+  useEffect(()=>{
+   console.log('data',formData)
+  },[formData])
+
   return (
     <div>
       <div className="text-2xl text-black-400 mb-4">Add Product to Store</div>
@@ -142,6 +148,7 @@ export default function AddProductToStore() {
               <Select
                 placeholder="Select Product"
                 className="w-full"
+                // onChange={handleProductChange}
                 onChange={handleProductChange}
                 options={productOptions}
               />
@@ -156,12 +163,14 @@ export default function AddProductToStore() {
               <Spin />
             ) : (
              <Select
+           mode="multiple"
+
   placeholder="Select Variant"
   className="w-full"
   onChange={(value) => {
     const selected = variantOptions.find((opt) => opt.value === value);
     setFormData((prev) => ({ ...prev, product_variantId: value }));
-    setAvailableQuantity(selected?.quantity);
+    // setAvailableQuantity(selected?.quantity);
   }}
   options={variantOptions}
   disabled={!variantOptions?.length}

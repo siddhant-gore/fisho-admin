@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Modal, Input, Button, Upload, message } from "antd";
+import { Table, Modal, Input, Button, Upload, message, Checkbox, Radio } from "antd";
 import { FiEdit, FiTrash, FiEye } from "react-icons/fi";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -73,7 +73,8 @@ const Products = () => {
 
   // Handle input change for edit
   const handleEditChange = (e) => {
-    const { name, value } = e.target;
+     const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
 
     if (name === "discount_percentage") {
       const percentage = Math.min(100, Number(value)); // Ensure it doesn't exceed 100
@@ -84,7 +85,7 @@ const Products = () => {
         discounted_price: discountedPrice.toFixed(2),
       });
     } else {
-      setEditProduct({ ...editProduct, [name]: value });
+      setEditProduct({ ...editProduct, [name]: newValue });
     }
   };
 
@@ -236,7 +237,64 @@ const Products = () => {
             value={editProduct?.name}
             onChange={handleEditChange}
           />
+<div>
+            <label className="font-bold">Description</label>
+            <Input.TextArea
+              name="description"
+              value={editProduct?.description}
+              onChange={handleEditChange}
+              rows={3}
+              placeholder="Enter product description"
+            />
+          </div>
 
+            <div>
+                      <label className="font-bold">Total Quantity</label>
+                      <Input
+                        name="quantity"
+                        type="number"
+                        min={0}
+                        value={editProduct?.quantity}
+                        onChange={handleEditChange}
+                        placeholder="Enter total quantity"
+                      />
+                    </div>
+
+                     <div>
+                                <Checkbox
+                                  name="featured"
+                                  checked={editProduct?.featured}
+                                  onChange={handleEditChange}
+                                >
+                                  Featured
+                                </Checkbox>
+                              </div>
+                    
+                              <div>
+                                <Checkbox
+                                  name="bestSellers"
+                                  checked={editProduct?.bestSellers}
+                                  onChange={handleEditChange}
+                                >
+                                  Best Sellers
+                                </Checkbox>
+                              </div>
+                    
+                          
+                            <p>Delivery Type</p>
+                              <Radio name='delivery_type' checked={editProduct?.delivery_type === "Express Delivery"} value="Express Delivery" onChange={handleEditChange}>Express Delivery</Radio>
+                              <Radio name='delivery_type' checked={editProduct?.delivery_type === "Next-Day Delivery"} value="Next-Day Delivery" onChange={handleEditChange}>Next-Day Delivery</Radio>
+                    
+                              <div>
+                                <label className="font-bold">Nutritional Facts</label>
+                                <Input.TextArea
+                                  name="nutritional_facts"
+                                  value={editProduct?.nutritional_facts}
+                                  onChange={handleEditChange}
+                                  rows={4}
+                                  placeholder="Enter nutritional facts"
+                                />
+                              </div>
           {/* <label>Price:</label>
           <Input
             name="price"
@@ -267,6 +325,7 @@ const Products = () => {
           <Input
             name="quantity"
             type="number"
+            min={0}
             value={editProduct?.quantity}
             onChange={handleEditChange}
           />
