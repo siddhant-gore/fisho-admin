@@ -69,9 +69,8 @@ const StoreCard = ({data}) => {
 
   return (
     <div>
-      {/* Tabs for Store Details & Store Products */}
+
       <Tabs defaultActiveKey="1" centered>
-        {/* Store Details Tab */}
         <Tabs.TabPane tab="Store Details" key="1">
           <div className="flex w-full justify-center mt-6">
             {store ? (
@@ -80,6 +79,7 @@ const StoreCard = ({data}) => {
                 style={{
                   width: "100%",
                 }}
+                title={"Store Details"}
 
                 cover={
                  store?.image && <img
@@ -94,22 +94,50 @@ const StoreCard = ({data}) => {
                   title={store?.name}
                   description={'📍 ' +  store.address}
                 />
-                <p className="mt-2 text-center">📞 {store?.phone_number}</p>
+                <p className="mt-2 text-center">Shop Phone Number: 📞 {store?.phone_number}</p>
                 <h3 className="text-center font-bold mt-2">Store Manager:</h3>
                 <Meta
                   className="text-center"
                   title={store?.user?.firstname + ' ' + store?.user?.lastname}
-                  description={store?.user?.email}
                   
                 />
               </Card>
             ) : (
               <p className="text-center text-red-500">No store selected.</p>
             )}
+            
+          </div>
+          <div className="flex w-full justify-center mt-6">
+            {store?.user ? (
+              <Card
+                hoverable
+                style={{
+                  width: "100%",
+                }}
+                title={"Subadmin Details"}
+                cover={
+                   store?.user?.profileImage &&     
+                  <img
+                    alt="Profile"
+                    src={store?.user?.profileImage}
+                    className="!w-40 h-40 rounded-full mx-auto mt-4"
+                  />
+                }
+              >
+                <Meta
+                  className="text-center"
+                  title={store?.user?.firstname + ' '+ store?.user?.lastname}
+                  description={store?.user?.email}
+                />
+                <p className="mt-2 text-center">📞 {store?.user?.phone_no}</p>
+                <p className="text-center">📅 Joined on {store?.user.createdAt}</p>
+              </Card>
+            ) : (
+              <p className="text-center text-red-500">No user selected.</p>
+            )}
           </div>
         </Tabs.TabPane>
 
-        {/* Store Products Tab */}
         <Tabs.TabPane tab="Store Products" key="2">
           <div className="p-4">
             <Table
@@ -127,7 +155,6 @@ const StoreCard = ({data}) => {
         </Tabs.TabPane>
       </Tabs>
 
-      {/* Go Back Button */}
       <div className="flex justify-center mt-4">
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded"

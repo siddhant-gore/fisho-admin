@@ -2,6 +2,7 @@ import React from 'react'
 import StoreCard from '../../Components/Cards/StoreCard'
 import { useGetStoreByIdQuery } from '../../redux/slices/apiSlice'
 import { useParams } from 'react-router-dom';
+import ProfileCard from '../../Components/Cards/ProfileCard';
 
 function ViewStore() {
 
