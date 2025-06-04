@@ -236,6 +236,9 @@ const ProductVariants = () => {
         title="Edit Variant"
         open={isEditModalOpen}
         onOk={handleSaveEdit}
+        okButtonProps={{
+          loading:updateLoading
+        }}
         centered
         onCancel={() => setIsEditModalOpen(false)}
       >

@@ -15,7 +15,7 @@ export default function AddVariant() {
     weight: "",
     discount_percentage: "",
     discounted_price: "",
-    quantity: "",
+    // quantity: "",
     image: "",
     imagePreview: "",
   });
@@ -69,12 +69,17 @@ useEffect(()=>{
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if(!formValues?.image){
+       message.error("Please upload an image.");
+      return;
+    }
+
     if (
       !formValues.productId ||
       !formValues.name ||
       !formValues.internalCost ||
       !formValues.price ||
-      !formValues.quantity ||
+      // !formValues.quantity ||
       !formValues.image ||
       !formValues.weight
     ) {
@@ -90,7 +95,7 @@ useEffect(()=>{
     formData.append("weight", formValues.weight);
     formData.append("discount_percentage", formValues.discount_percentage);
     formData.append("discounted_price", formValues.discounted_price);
-    formData.append("quantity", formValues.quantity);
+    // formData.append("quantity", formValues.quantity);
     formData.append("image", formValues.image);
 
     try {
@@ -155,7 +160,7 @@ useEffect(()=>{
                 <img
                   src={formValues.imagePreview}
                   alt="Preview"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               ) : (
                 <div>
@@ -166,7 +171,7 @@ useEffect(()=>{
             </Upload>
           </Form.Item>
 
-          <Form.Item label="Weight" className="text-gray-800 font-bold">
+          <Form.Item label="Weight (in grams)" className="text-gray-800 font-bold">
             <Input
               name="weight"
               type="number"
@@ -227,7 +232,7 @@ useEffect(()=>{
             </Form.Item>
           </div>
 
-          <Form.Item label="Total Quantity" className="text-gray-800 font-bold">
+          {/* <Form.Item label="Total Quantity" className="text-gray-800 font-bold">
             <Input
               name="quantity"
               type="number"
@@ -236,7 +241,7 @@ useEffect(()=>{
               onChange={handleChange}
               value={formValues.quantity}
             />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button
