@@ -100,6 +100,10 @@ export default function AddProducts() {
     // Add discounted price to FormData
     // formData.append("discounted_price", discountedPrice);
 
+    if(fileList?.length === 0){
+      return message.error("Please add an image")
+    }
+
     fileList.forEach((file) => {
       formData.append("images", file);
     });

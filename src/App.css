@@ -1,3 +1,5 @@
+@import "react-quill/dist/quill.snow.css";
+
 #userview {
   overflow: hidden !important;
   /* height: 85vh; */

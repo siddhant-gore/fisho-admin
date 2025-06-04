@@ -114,7 +114,7 @@ const handleSave = async () => {
         key: "productImage",
         render: (_, record) => (
           <img
-            src={record?.image}
+            src={record?.images[0]}
             alt="Product"
             className="w-12 h-12 rounded"
           />

@@ -21,13 +21,13 @@ export default function ProductCard() {
               padding: "20px",
             }}
             cover={
-              <Carousel autoplay dotPosition="bottom" className="w-64 mx-auto">
+              <Carousel autoplay dotPosition="bottom" className="w-72 mx-auto bg-gray-500">
                 {product?.images?.map((image, index) => (
-                  <div key={index} className="flex justify-center">
+                  <div key={index} className="flex justify-center align-center">
                     <img
                       alt={`${product.name} ${index + 1}`}
                       src={image}
-                      className="!w-56 h-56 rounded-md object-cover"
+                      className="w-auto  rounded-md object-contain"
                     />
                   </div>
                 ))}
@@ -37,30 +37,36 @@ export default function ProductCard() {
             <Meta
               title={
                 <h2 className="text-xl font-bold text-center">
-                  {product.name}
+                  {product?.name}
                 </h2>
               }
             />
 
             <div className="mt-4 space-y-2 text-gray-700">
+        {product?.price &&       
               <p className="text-lg">
                 <strong>🛒 Original Price:</strong>{" "}
                 <span className="text-gray-700 font-semibold">
-                  ₹{product.price}
+                  ₹{product?.price}
                 </span>
               </p>
+}
+              {product?.discount_percentage &&
               <p className="text-lg">
                 <strong>📉 Discount Percentage:</strong>{" "}
                 <span className="text-red-500 font-semibold">
-                  {product.discount_percentage}%
+                  {product?.discount_percentage}%
                 </span>
               </p>
+}
+{product?.discounted_price &&
               <p className="text-lg">
                 <strong>💰 Discounted Price:</strong>{" "}
                 <span className="text-green-600 font-semibold">
                   ₹{product.discounted_price}
                 </span>
               </p>
+}
               <p className="text-lg">
                 <strong>📦 Stock:</strong>{" "}
                 <span className="font-bold">{product.quantity}</span>

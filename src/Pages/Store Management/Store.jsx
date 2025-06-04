@@ -172,7 +172,7 @@ const Stores = () => {
         onCancel={() => setIsEditModalOpen(false)}
       >
         <div className="flex flex-col gap-4">
-          <label>Store Image:</label>
+          {/* <label>Store Image:</label>
           <Upload
             listType="picture"
             fileList={imageList}
@@ -188,7 +188,7 @@ const Stores = () => {
               alt="Store"
               className="w-20 h-20 rounded-md mt-2"
             />
-          )}
+          )} */}
 
           <label>Store Name:</label>
           <Input

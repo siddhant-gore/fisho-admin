@@ -28,6 +28,12 @@ import Partners from "./Pages/User Management/Partners";
 import Users from "./Pages/User Management/Users";
 import ViewUsers from "./Pages/User Management/ViewUsers";
 import ViewStore from "./Pages/Store Management/ViewStore";
+import PrivacyPolicy from "./Pages/Content Management/PrivacyPolicy";
+import TermsConditons from "./Pages/Content Management/TermsConditons";
+import UserTc from "./Pages/Content Management/UserTc";
+import DeliveryTc from "./Pages/Content Management/DeliveryTc";
+import UserPolicy from "./Pages/Content Management/UserPolicy";
+import DeliveryPolicy from "./Pages/Content Management/DeliveryPolicy";
 
 function App() {
   return (
@@ -47,6 +53,12 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/partners" element={<Partners />} />
         <Route path="/content/banners" element={<Banner />} />
+        <Route path="/content/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/content/terms-conditions" element={<TermsConditons />} />
+        <Route path="/content/terms-conditions/user" element={<UserTc />} />
+        <Route path="/content/terms-conditions/delivery" element={<DeliveryTc />} />
+        <Route path="/content/privacy-policy/user" element={<UserPolicy />} />
+        <Route path="/content/privacy-policy/delivery" element={<DeliveryPolicy />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/orders/view/:id" element={<ViewOrder />} />
 

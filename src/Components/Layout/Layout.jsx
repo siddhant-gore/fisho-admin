@@ -95,8 +95,8 @@ const Layout = ({ children }) => {
           <CollapsibleMenu icon={BiSolidBookContent} label="Content Management" menuKey="content">
             <MenuItem icon={() => <div />} label="Banners" path="/content/banners" />
             
-          <MenuItem icon={()=><div/>} label="Privacy Policy" path="/privacy_policy" />
-          <MenuItem icon={()=><div/>} label="Terms & Conditions" path="/terms_conditions" />
+          <MenuItem icon={()=><div/>} label="Privacy Policy" path="/content/privacy-policy" />
+          <MenuItem icon={()=><div/>} label="Terms & Conditions" path="/content/terms-conditions" />
        
           </CollapsibleMenu>
 

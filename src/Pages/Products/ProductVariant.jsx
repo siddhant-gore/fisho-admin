@@ -63,6 +63,7 @@ const ProductVariants = () => {
         ...editVariant,
         discount_percentage: percentage,
         discounted_price: discountedPrice.toFixed(2),
+
       });
     } else if (name === "price") {
       const price = Number(value);
@@ -95,8 +96,14 @@ const ProductVariants = () => {
       formData.append("image", imageList[0].originFileObj);
     }
 
+    formData.set("product",editVariant?.product?.id)
+    console.log(editVariant?.product?.id)
+
     try {
-      const data = await updateProductVariant({id:editVariant,data:formData}).unwrap();
+
+        
+
+      const data = await updateProductVariant({id:editVariant?.id,data:formData}).unwrap();
       
 
         message.success("Product variant updated successfully.");

@@ -32,6 +32,8 @@ export const apiSlice = createApi({
     'Categories',
     'ProductVariants',
     'Stores',
+    'Term',
+    'Privacy'
   ],
 
 
@@ -414,6 +416,53 @@ export const apiSlice = createApi({
         body:data
       }),
     }),
+
+     getUserTc: builder.query({
+      query:()=>({
+         url:`/terms-and-condition/user`,
+         method:'GET',  
+      }),
+      providesTags:['Term']
+  }),
+     getDeliveryTc: builder.query({
+      query:()=>({
+         url:`/terms-and-condition/delivery-partner`,
+         method:'GET',  
+      }),
+      providesTags:['Term']
+  }),
+
+     updateTc: builder.mutation({
+      query:({id,data})=>({
+         url:`/terms-and-condition/update/${id}`,
+         method:'PATCH',  
+         body:data
+      }),
+      invalidatesTags:['Term']
+  }),
+     getUserPolicy: builder.query({
+      query:()=>({
+         url:`/privacy-policy/user`,
+         method:'GET',  
+      }),
+      providesTags:['Privacy']
+  }),
+     getDeliveryPolicy: builder.query({
+      query:()=>({
+         url:`/privacy-policy/delivery-partner`,
+         method:'GET',  
+      }),
+      providesTags:['Privacy']
+  }),
+
+     updatePolicy: builder.mutation({
+      query:({id,data})=>({
+         url:`/privacy-policy/update/${id}`,
+         method:'PATCH',  
+         body:data
+      }),
+      invalidatesTags:['Privacy']
+  }),
         
    
 })
@@ -421,7 +470,9 @@ export const apiSlice = createApi({
 
 
 export const {
- 
+ useGetUserPolicyQuery,
+ useGetDeliveryPolicyQuery,
+ useUpdatePolicyMutation,
 useLoginUserMutation,
 useGetUserQuery,
 useGetUserByIdQuery,
@@ -460,6 +511,9 @@ useGetAllStoresQuery,
 useGetStoreByIdQuery,
 useCreateStoreMutation,
 useUpdateStoreByIdMutation,
-useDeleteStoreByIdMutation
+useDeleteStoreByIdMutation,
+useGetUserTcQuery,
+useUpdateTcMutation,
+useGetDeliveryTcQuery,
 
 } = apiSlice;

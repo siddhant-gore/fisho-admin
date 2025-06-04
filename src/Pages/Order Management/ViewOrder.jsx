@@ -7,17 +7,22 @@ import { getError } from "../../utils/error";
 import { toast } from "react-toastify";
 import { BulkOrderStatuses } from "../../utils/constants";
 import { useEffect, useState } from "react";
+import { newSocket } from "../../utils/socket";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../../redux/slices/authSlice";
+import { newUserSocket } from "../../utils/userSocket";
 const { Meta } = Card;
 
 const ViewOrder = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const {id} = useParams();
-    const {data,isLoading} = useGetOrderByIdQuery(id)  
+    const {data,isLoading,refetch} = useGetOrderByIdQuery(id)  
     const [order,setOrder] = useState(null);
     const [priceByAdmin,setPriceByAdmin] = useState(null);
     const [status,setStatus] = useState(null);
 
+  const {token} = useSelector(selectAuth);
 
 
     const [updateBulkOrder,{isLoading:updateLoading}] = useUpdateBulkOrderByIdMutation();
@@ -33,7 +38,6 @@ const ViewOrder = () => {
 const handleStatusChange = async (status,record) => {
     try {
 
-            console.log('status',status);
             const data = await updateBulkOrder({data:{
               orderStatus:status,
             },groupId:order?.groupId});
@@ -46,6 +50,36 @@ const handleStatusChange = async (status,record) => {
       getError(error);
     }
   };
+
+    const [socket, setSocket] = useState(null);
+    
+    useEffect(() => {
+      const socketInstance = newUserSocket(token);
+      
+      setSocket(socketInstance);
+  
+      return () => socketInstance.close();
+    }, []);
+
+   const handleFireOrder = async (e) => {
+    e.preventDefault();
+    try {
+      console.log('order',order?.id);
+
+      socket.emit("fire-order", {
+    orderId: order?.id
+    }
+   );
+
+   toast.success("Order ready to pickup"); 
+
+  refetch();
+     
+    } catch (error) {
+      getError(error);
+    }
+  };
+
 const handleSave = async () => {
     try {
 
@@ -262,7 +296,14 @@ const handleSave = async () => {
 
 <p className="mt-2">Special Request:<span className="border rounded-md ms-2 px-2">{order?.special_req}</span></p>
                   
+                  <div className="text-center">
 
+{order?.delivery === 'Next-Day Delivery' &&
+   <Button disabled={order?.readytoPickUp} onClick={handleFireOrder} className={`bg-green-500 mt-2 font-semibold`}>
+            Order Ready to Pickup ?
+    </Button>
+}
+                  </div>
 
                  
               </Card>
@@ -270,6 +311,8 @@ const handleSave = async () => {
               <p className="text-center text-red-500">No data selected.</p>
             )}
           </div>
+
+       
 
         {/* Orders Tab */}
           <div className="">
