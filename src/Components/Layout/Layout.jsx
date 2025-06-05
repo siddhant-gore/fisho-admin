@@ -68,7 +68,7 @@ const Layout = ({ children }) => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <div
-        className={`fixed z-30 inset-y-0 left-0 w-68 transform ${
+        className={`fixed z-30 inset-y-0 left-0 w-68 transform overflow-y-auto ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out bg-[#0034BE] text-white p-4`}
       >
