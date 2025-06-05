@@ -97,8 +97,8 @@ const ProductVariants = () => {
     }
 
     formData.set("product",editVariant?.product?.id)
-    console.log(editVariant?.product?.id)
 
+    
     try {
 
         
@@ -179,11 +179,11 @@ const ProductVariants = () => {
       dataIndex: "discounted_price",
       key: "discounted_price",
     },
-    {
-      title: "Total Quantity",
-      dataIndex: "quantity",
-      key: "totalQuantity",
-    },
+    // {
+    //   title: "Total Quantity",
+    //   dataIndex: "quantity",
+    //   key: "totalQuantity",
+    // },
     {
       title: "Actions",
       key: "actions",
@@ -283,13 +283,13 @@ const ProductVariants = () => {
             disabled
           />
 
-          <label>Total Quantity:</label>
+          {/* <label>Total Quantity:</label>
           <Input
             name="totalQuantity"
             type="number"
             value={editVariant?.quantity || ""}
             onChange={handleEditChange}
-          />
+          /> */}
 
           <label>Image Upload:</label>
           <Upload
