@@ -110,11 +110,13 @@ const Products = () => {
       console.log(`${key}:`, value);
     }
 
-  
+    console.log('quantity',editProduct)
+console.log(typeof(editProduct?.id));
+formData.delete('category')
+
     try {
       const response = await updateProduct({id:editProduct?.id,data:formData}).unwrap();
         
-
         message.success("Product updated successfully.");
         setIsEditModalOpen(false);
       
@@ -255,7 +257,9 @@ const Products = () => {
                         type="number"
                         min={0}
                         value={editProduct?.quantity}
-                        onChange={handleEditChange}
+                        // onChange={handleEditChange}
+                        onChange={(e) => setEditProduct({ ...editProduct, quantity: Number(e.target.value) })}
+
                         placeholder="Enter total quantity"
                       />
                     </div>
@@ -321,14 +325,7 @@ const Products = () => {
             style={{ cursor: "not-allowed" }}
           /> */}
 
-          <label>Total Quantity:</label>
-          <Input
-            name="quantity"
-            type="number"
-            min={0}
-            value={editProduct?.quantity}
-            onChange={handleEditChange}
-          />
+         
 
           <label>Product Images:</label>
           <Upload
