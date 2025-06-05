@@ -113,6 +113,11 @@ const Products = () => {
     console.log('quantity',editProduct)
 console.log(typeof(editProduct?.id));
 formData.delete('category')
+formData.delete('id')
+formData.delete('key')
+formData.delete('isDeleted')
+formData.delete('createdAt')
+formData.delete('updatedAt')
 
     try {
       const response = await updateProduct({id:editProduct?.id,data:formData}).unwrap();
