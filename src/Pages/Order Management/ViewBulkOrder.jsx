@@ -204,7 +204,7 @@ const handleSave = async () => {
 
                   {order?.orderStatus !== 'notAccepted' &&
                   <>
-                  <label htmlFor="price">Price</label>
+                  <label htmlFor="price">Price (AED)</label>
                         <input
                           type="number"
                           id="price"

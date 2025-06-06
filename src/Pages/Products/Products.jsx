@@ -170,6 +170,12 @@ formData.delete('updatedAt')
     //   dataIndex: "discounted_price",
     //   key: "discounted_price",
     // },
+    { title: "Delivery Type", 
+       key: "delivery",
+       dataIndex:"delivery_type",
+       className:"text-nowrap"
+
+     },
     {
       title: "Total Quantity",
       dataIndex: "quantity",

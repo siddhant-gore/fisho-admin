@@ -1,6 +1,7 @@
 export const BulkOrderStatuses = [
     { key: "notAccepted", label: "Not Accepted", color: "#4f4f4f" },
     { key: "accepted", label: "Accepted", color: "#52c41a" },
+    { key: "pickup", label: "Pickup", color: "#52c41a" },
     { key: "rejected", label: "Rejected", color: "#ff4d4f" },
     { key: "confirmDetails", label: "Confirm Details", color: "#faad14" },
     { key: "drop", label: "Drop", color: "#1890ff" },

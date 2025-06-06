@@ -284,9 +284,9 @@ const handleSave = async () => {
                 </p>
 <p className=" "><span className="font-semibold">Payment Made:</span> <span className={`${order?.paymentMade?'text-green-600':'text-red-600'}`}>{order?.paymentMade?'Paid':'Not Paid'}</span></p>
 <p className=""><span className="font-semibold">Payment Mode:</span> {order?.paymentMode}</p>
-<p className=""><span className="font-semibold">Earnings:</span> ${order?.earnings}</p>
-<p className=""><span className="font-semibold">Fast delivery:</span> {order?.isFastDelivery?'Yes':'No'}</p>
-<p className=""><span className="font-semibold">Delivery cost:</span> ${order?.delivery_cost}</p>
+<p className=""><span className="font-semibold">Delivery Partner Earnings:</span> AED {order?.earnings}</p>
+<p className=""><span className="font-semibold">Delivery Type:</span> {order?.delivery}</p>
+<p className=""><span className="font-semibold">Delivery cost:</span> AED {order?.delivery_cost}</p>
 <p className=""><span className="font-semibold">Store:</span> {order?.store?.name}</p>
 <p className=""><span className="font-semibold">Delivery By:</span> {order?.deliveryBy
 
@@ -294,7 +294,7 @@ const handleSave = async () => {
 
 </div>
 
-<p className="mt-2">Special Request:<span className="border rounded-md ms-2 px-2">{order?.special_req}</span></p>
+<p className="mt-2 font-semibold">Special Request:<span className="border rounded-md ms-2 px-2">{order?.special_req}</span></p>
                   
                   <div className="text-center">
 

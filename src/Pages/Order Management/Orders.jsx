@@ -247,6 +247,12 @@ function formatStatusLabel(status) {
     //    key: "priceByAdmin",
     //    render: (data) => data?.priceByAdmin || 'N/A'
     //   },
+    { title: "Delivery Type", 
+       key: "delivery",
+       render: (data) => data?.delivery,
+       className:"text-nowrap"
+
+      },
       {
   title: "Order Status",
   key: "orderStatus",
@@ -310,13 +316,14 @@ function formatStatusLabel(status) {
       title: "Products",
       // dataIndex: "ite",
       key: "items",
-      render: (data) => data?.items?.map((item)=>item?.productVariant?.name).join(' | ')
+      render: (data) => data?.items?.map((item)=>item?.productVariant?.name).join(' | '),
+      className:"text-nowrap"
     },
     {
       title: "Product Quantity",
       // dataIndex: "ite",
       key: "items",
-      render: (data) => data?.items?.map((item)=>item?.quantity).join(' | ')
+      render: (data) => data?.items?.map((item)=>item?.quantity).join(' | '),
     },
    
     {
@@ -354,7 +361,9 @@ function formatStatusLabel(status) {
     <div>
       <div className="p-4">
      <h1 className="text-2xl mb-2">Orders</h1>
+
       <Table
+      className="responsive"
   columns={columns}
   dataSource={data?.data?.data?.map((user) => ({ ...user, key: user?.id }))}
   pagination={{
@@ -363,7 +372,7 @@ function formatStatusLabel(status) {
     total: data?.data?.total,
      
   }}
-  
+
   rowClassName={(record) => {
     const createdAt = new Date(record.createdAt);
     const now = new Date();
@@ -373,7 +382,6 @@ function formatStatusLabel(status) {
   loading={isFetching}
   onChange={handleTableChange}
 />
-
 
       </div>
 
