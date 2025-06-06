@@ -1,4 +1,4 @@
-import { Card, Tabs, Table, Dropdown, Menu, Button } from "antd";
+import { Card, Tabs, Table, Dropdown, Menu, Button, Image } from "antd";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import image from "../../assets/Images/trout-underwater-260nw-130186676.webp";
 import { useGetBulkOrderByIdQuery, useGetOrderByIdQuery, useUpdateBulkOrderByIdMutation } from "../../redux/slices/apiSlice";
@@ -11,6 +11,8 @@ import { newSocket } from "../../utils/socket";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../../redux/slices/authSlice";
 import { newUserSocket } from "../../utils/userSocket";
+
+
 const { Meta } = Card;
 
 const ViewOrder = () => {
@@ -315,10 +317,10 @@ const handleSave = async () => {
        
 
         {/* Orders Tab */}
-          <div className="">
-            <h2 className="font-bold mt-2">Order</h2>
+             <Card title="Items" className="mt-3">
+
             <Table
-              columns={columns}
+            columns={columns}
               loading={isLoading}
               dataSource={order?.order_items?.map((order) => ({
                 ...order,
@@ -326,8 +328,27 @@ const handleSave = async () => {
               }))}
               pagination={false}
             />
-          </div>
-     
+            </Card>
+
+                {order?.image &&
+           <Card title="Delivery Proofs" className="mt-3">
+      <Image.PreviewGroup>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          {Object.values(order?.image).map((url, index) => (
+            <Image
+              key={index}
+              width={120}
+              height={120}
+              src={url}
+              alt={`Proof ${index + 1}`}
+              style={{ objectFit: "cover", borderRadius: 8 }}
+            />
+          ))}
+        </div>
+      </Image.PreviewGroup>
+     </Card>
+
+        }
 
       {/* Go Back Button */}
       <div className="flex justify-center mt-4">
