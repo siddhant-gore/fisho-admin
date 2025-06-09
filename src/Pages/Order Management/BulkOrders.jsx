@@ -8,7 +8,7 @@ import { useDeleteBulkOrderByIdMutation, useGetBulkOrdersQuery, useGetUserQuery,
 import { selectAuth } from "../../redux/slices/authSlice";
 import { newSocket } from "../../utils/socket";
 import { useSelector } from "react-redux";
-import { BulkOrderStatuses } from "../../utils/constants";
+import { OrderStatuses } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { getError } from "../../utils/error";
 import { FaCheck } from "react-icons/fa6";
@@ -219,7 +219,7 @@ const BulkOrders = () => {
         render: (_, record) => {
             const currentKey = record?.orderStatus;
       
-            const menuItems = BulkOrderStatuses?.map((status) => ({
+            const menuItems = OrderStatuses?.map((status) => ({
               key: status.key,
               label: (
                 <div
@@ -247,8 +247,8 @@ const BulkOrders = () => {
                   onClick: ({ key }) => handleStatusChange(key, record),
                 }}
               >
-                <div className=" border rounded-lg  text-center" style={{ color: BulkOrderStatuses.find(s => s.key === currentKey)?.color }}>
-                  {BulkOrderStatuses?.find((s) => s.key === currentKey)?.label || "Select Status"}
+                <div className=" border rounded-lg  text-center" style={{ color: OrderStatuses.find(s => s.key === currentKey)?.color }}>
+                  {OrderStatuses?.find((s) => s.key === currentKey)?.label || "Select Status"}
                 </div>
               </Dropdown>
             );

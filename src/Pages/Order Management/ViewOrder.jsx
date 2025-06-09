@@ -5,7 +5,7 @@ import { useGetBulkOrderByIdQuery, useGetOrderByIdQuery, useUpdateBulkOrderByIdM
 import { FaCheck, FaLocationDot } from "react-icons/fa6";
 import { getError } from "../../utils/error";
 import { toast } from "react-toastify";
-import { BulkOrderStatuses } from "../../utils/constants";
+import { OrderStatuses } from "../../utils/constants";
 import { useEffect, useState } from "react";
 import { newSocket } from "../../utils/socket";
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ const ViewOrder = () => {
     const [order,setOrder] = useState(null);
     const [priceByAdmin,setPriceByAdmin] = useState(null);
     const [status,setStatus] = useState(null);
+    const [loading,setLoading] = useState(false)
 
   const {token} = useSelector(selectAuth);
 
@@ -68,16 +69,20 @@ const handleStatusChange = async (status,record) => {
     try {
       console.log('order',order?.id);
 
-      socket.emit("fire-order", {
+     setLoading(true);
+
+     await socket.emit("fire-order", {
     orderId: order?.id
     }
    );
 
+   setLoading(false)
    toast.success("Order ready to pickup"); 
 
   refetch();
      
     } catch (error) {
+      setLoading(false);
       getError(error);
     }
   };
@@ -150,7 +155,7 @@ const handleSave = async () => {
   const StatusBtn =(record)=>{
   const currentKey = record?.orderStatus;
       
-  const menuItems = BulkOrderStatuses?.map((status) => ({
+  const menuItems = OrderStatuses?.map((status) => ({
     key: status.key,
     label: (
       <div
@@ -177,8 +182,8 @@ const handleSave = async () => {
       }}
       disabled
     >
-      <div className=" border rounded-lg text-center" style={{ color: BulkOrderStatuses?.find(s => s.key === currentKey)?.color }}>
-        {BulkOrderStatuses?.find((s) => s.key === currentKey)?.label || "Select Status"}
+      <div className=" border rounded-lg text-center" style={{ color: OrderStatuses?.find(s => s.key === currentKey)?.color }}>
+        {OrderStatuses?.find((s) => s.key === currentKey)?.label || "Select Status"}
       </div>
     </Dropdown>
   );
@@ -301,7 +306,7 @@ const handleSave = async () => {
                   <div className="text-center">
 
 {order?.delivery === 'Next-Day Delivery' &&
-   <Button disabled={order?.readytoPickUp} onClick={handleFireOrder} className={`bg-green-500 mt-2 font-semibold`}>
+   <Button loading={loading} disabled={order?.readytoPickUp} onClick={handleFireOrder} className={`bg-green-500 mt-2 font-semibold`}>
             Order Ready to Pickup ?
     </Button>
 }

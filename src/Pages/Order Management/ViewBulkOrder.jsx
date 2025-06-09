@@ -24,7 +24,7 @@ const ViewBulkOrder = () => {
    
 
     useEffect(()=>{
-          if(data?.data?.bulkOrder[0]){
+          if(data?.data?.bulkOrder?.length > 0 &&  data?.data?.bulkOrder[0]){
             setOrder(data?.data?.bulkOrder[0])
             setPriceByAdmin(data?.data?.bulkOrder[0]?.priceByAdmin)
           }
@@ -113,6 +113,7 @@ const handleSave = async () => {
         title: "Product Image",
         key: "productImage",
         render: (_, record) => (
+         record?.images?.length > 0 && 
           <img
             src={record?.images[0]}
             alt="Product"
