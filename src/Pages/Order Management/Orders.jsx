@@ -6,12 +6,12 @@ import defaultProfile from "../../assets/Images/profile (1).png";
 import { useNavigate } from "react-router-dom";
 import { useDeleteBulkOrderByIdMutation, useGetBulkOrdersQuery, useGetOrdersQuery, useGetUserQuery, useUpdateBulkOrderByIdMutation } from "../../redux/slices/apiSlice";
 import { selectAuth } from "../../redux/slices/authSlice";
-import { newSocket } from "../../utils/socket";
 import { useSelector } from "react-redux";
 import { OrderStatuses } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { getError } from "../../utils/error";
 import { FaCheck } from "react-icons/fa6";
+import { newUserSocket } from "../../utils/userSocket";
 
 
 
@@ -34,7 +34,7 @@ const Orders = () => {
 
   
   useEffect(() => {
-    const socketInstance = newSocket(token);
+    const socketInstance = newUserSocket(token);
     
     setSocket(socketInstance);
 
