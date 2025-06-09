@@ -44,12 +44,12 @@ const Orders = () => {
   useEffect(() => {
     if (socket == null) return;
 
-    socket.on("newBulkOrder", (data) => {
+    socket.on("newOrder", (data) => {
       console.log('data',data)
       refetch();
     });
     
-    return () => socket.off("newBulkOrder");
+    return () => socket.off("newOrder");
   }, [socket]);
 
 
