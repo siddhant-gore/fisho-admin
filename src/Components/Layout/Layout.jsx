@@ -81,17 +81,23 @@ const Layout = ({ children }) => {
           <MenuItem icon={CgProfile} label="Users" path="/users" />
           <MenuItem icon={CgProfile} label="Partners" path="/partners" />
 
+{user?.role === 'admin' &&
+
           <CollapsibleMenu icon={BsCart4} label="Inventory Management" menuKey="products">
             <MenuItem icon={() => <div />} label="Categories" path="/category" />
             <MenuItem icon={() => <div />} label="Product List" path="/products" />
             <MenuItem icon={() => <div />} label="Product Variant" path="/products-variant" />
           </CollapsibleMenu>
+}
 
           <CollapsibleMenu icon={FaOpencart} label="Orders Management" menuKey="orders">
-            <MenuItem icon={() => <div />} label="Bulk Orders" path="/bulk-orders" />
+      {user?.role === 'admin' &&
+      <MenuItem icon={() => <div />} label="Bulk Orders" path="/bulk-orders" />
+      }
             <MenuItem icon={() => <div />} label="Orders" path="/orders" />
           </CollapsibleMenu>
 
+{user?.role === 'admin' &&
           <CollapsibleMenu icon={BiSolidBookContent} label="Content Management" menuKey="content">
             <MenuItem icon={() => <div />} label="Banners" path="/content/banners" />
             
@@ -99,13 +105,15 @@ const Layout = ({ children }) => {
           <MenuItem icon={()=><div/>} label="Terms & Conditions" path="/content/terms-conditions" />
        
           </CollapsibleMenu>
+}
+{user?.role === 'admin' &&
 
           <CollapsibleMenu icon={IoStorefrontOutline} label="Stores Management" menuKey="stores">
             <MenuItem icon={() => <div />} label="Store List" path="/stores" />
             <MenuItem icon={() => <div />} label="Add Store Products" path="/add-store-products" />
             <MenuItem icon={() => <div />} label="Store Billing" path="/store-billing" />
           </CollapsibleMenu>
-
+}
         </ul>
       </div>
 

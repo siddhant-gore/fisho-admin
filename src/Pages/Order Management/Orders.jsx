@@ -227,6 +227,10 @@ function formatStatusLabel(status) {
         );
       },      
     },
+    { title: "Order Id", 
+       key: "orderId",
+       render: (data) =><span>#{data?.orderId}</span>,
+      },
     { title: "First Name", 
        key: "firstname",
        render: (data) => data?.user?.firstname
