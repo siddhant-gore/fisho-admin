@@ -211,7 +211,7 @@ export const apiSlice = createApi({
 
     getAllCategories: builder.query({
         query:()=>({
-           url:'/category/findall',
+           url:'/category/findall/admin',
            method:'GET',
           //  params:{
           //   page,
