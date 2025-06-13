@@ -18,6 +18,8 @@ const Products = () => {
 
 
   
+const [originalImageUrls, setOriginalImageUrls] = useState([]);
+const [deletedImages, setDeletedImages] = useState([]);
 
 
   useEffect(()=>{
@@ -44,6 +46,8 @@ const Products = () => {
         url,
       })) || []
     );
+    setOriginalImageUrls(product?.images || []);
+
     setIsEditModalOpen(true);
   };
 
@@ -118,6 +122,11 @@ formData.delete('key')
 formData.delete('isDeleted')
 formData.delete('createdAt')
 formData.delete('updatedAt')
+// Append deleted images
+if (deletedImages.length > 0) {
+  deletedImages.forEach(url => formData.append("deleted_images", url));
+}
+
 
     try {
       const response = await updateProduct({id:editProduct?.id,data:formData}).unwrap();
@@ -340,16 +349,24 @@ formData.delete('updatedAt')
 
           <label>Product Images:</label>
           <Upload
-            listType="picture-card"
-            fileList={imageList}
-            onChange={({ fileList }) => setImageList(fileList)}
-            beforeUpload={() => false}
-            multiple
-          >
-            {imageList.length < 5 && (
-              <Button icon={<PlusOutlined />}>Upload</Button>
-            )}
-          </Upload>
+  listType="picture-card"
+  fileList={imageList}
+  onChange={({ fileList }) => {
+    const currentUrls = fileList
+      .filter(file => file.url && !file.originFileObj)
+      .map(file => file.url);
+
+    const removed = originalImageUrls.filter(url => !currentUrls.includes(url));
+    setDeletedImages(removed);
+
+    setImageList(fileList);
+  }}
+  beforeUpload={() => false}
+  multiple
+>
+  {imageList.length < 5 && <Button icon={<PlusOutlined />}>Upload</Button>}
+</Upload>
+
         </div>
       </Modal>
     </div>
