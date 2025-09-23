@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@font-face {
+  font-family: "UAESymbol";
+  src: url("/fonts/font.woff2") format("woff2"), url("/fonts/font.woff") format("woff"),
+    url("/fonts/font.ttf") format("truetype");
+}
+
+
+body{
+  background: white ;
+}
+
+.dirham-symbol {
+  font-family: "UAESymbol", sans-serif;
+  font-size: inherit;
+  color: inherit;
+  /* font-weight: bold; */
+}

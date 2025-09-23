@@ -1,0 +1,112 @@
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./Pages/Dashboard";
+import Categories from "./Pages/Products/Category";
+import Products from "./Pages/Products/Products";
+import ProductVariants from "./Pages/Products/ProductVariant";
+import AddProducts from "./Pages/Products/AddProducts";
+import AddVariant from "./Pages/Products/AddVariant";
+import ProfileCard from "./Components/Cards/ProfileCard";
+import ProductCard from "./Components/Cards/ProductCard";
+import Stores from "./Pages/Store Management/Store";
+import StoreCard from "./Components/Cards/StoreCard";
+import AddStore from "./Pages/Store Management/AddStore";
+import AddStoreProducts from "./Pages/Store Management/AddStoreProducts";
+import StoreBilling from "./Pages/Store Management/StoreBilling";
+import StoreBill from "./Pages/Store Management/StoreBill";
+import ProductVariant from "./Components/Cards/ProductVariant";
+import Login from "./Components/Login/Login";
+import { ToastContainer } from "react-toastify";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import BulkOrders from "./Pages/Order Management/BulkOrders";
+import ViewBulkOrder from "./Pages/Order Management/ViewBulkOrder";
+import Layout from "./Components/Layout/Layout";
+import Orders from "./Pages/Order Management/Orders";
+import ViewOrder from "./Pages/Order Management/ViewOrder";
+import Banner from "./Pages/Content Management/Banner";
+import Partners from "./Pages/User Management/Partners";
+import Users from "./Pages/User Management/Users";
+import ViewUsers from "./Pages/User Management/ViewUsers";
+import ViewStore from "./Pages/Store Management/ViewStore";
+import PrivacyPolicy from "./Pages/Content Management/PrivacyPolicy";
+import TermsConditons from "./Pages/Content Management/TermsConditons";
+import UserTc from "./Pages/Content Management/UserTc";
+import DeliveryTc from "./Pages/Content Management/DeliveryTc";
+import UserPolicy from "./Pages/Content Management/UserPolicy";
+import DeliveryPolicy from "./Pages/Content Management/DeliveryPolicy";
+import OrderHistory from "./Pages/Store Management/OrderHistory";
+import NotificationInit from "./Components/NotificationInit";
+import FCMToken from "./Components/FCMToken";
+import BillingPage from "./Pages/Store Management/Billing";
+import Refunds from "./Pages/Order Management/Refunds";
+import ViewRefund from "./Pages/Order Management/RefundView";
+import ViewPartner from "./Pages/User Management/ViewPartner";
+import Profile from "./Pages/Profile";
+
+function App() {
+
+  document.addEventListener('click', () => {
+  const audio = new Audio();
+  audio.play().catch(() => {}); // Unlock audio context
+});
+
+
+  return (
+    <>
+        <Layout>
+        <NotificationInit/>
+        <FCMToken/>
+      <Routes>
+        <Route path="/" element={<Login />} />
+
+        <Route element={<ProtectedRoute/>}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/category" element={<Categories />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products-variant" element={<ProductVariants />} />
+        <Route path="/add-products" element={<AddProducts />} />
+        <Route path="/edit-products/:id" element={<AddProducts />} />
+        <Route path="/add-product-variant" element={<AddVariant />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/partners" element={<Partners />} />
+        <Route path="/content/banners" element={<Banner />} />
+        <Route path="/content/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/content/terms-conditions" element={<TermsConditons />} />
+        <Route path="/content/terms-conditions/user" element={<UserTc />} />
+        <Route path="/content/terms-conditions/delivery" element={<DeliveryTc />} />
+        <Route path="/content/privacy-policy/user" element={<UserPolicy />} />
+        <Route path="/content/privacy-policy/delivery" element={<DeliveryPolicy />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/orders/view/:id" element={<ViewOrder />} />
+
+        <Route path="/bulk-orders" element={<BulkOrders />} />
+        <Route path="/bulk-orders/view/:id" element={<ViewBulkOrder />} />
+        <Route path="/users/profile/:id" element={<ViewUsers/>} />
+        <Route path="/partners/profile/:id" element={<ViewPartner/>} />
+        <Route path="/product-card" element={<ProductCard />} />
+        <Route path="/stores" element={<Stores />} />
+        <Route path="/store-details/:id" element={<ViewStore />} />
+        <Route path="/add-store" element={<AddStore />} />
+        <Route path="/edit-store/:id" element={<AddStore />} />
+        <Route path="/add-store-products" element={<AddStoreProducts />} />
+        <Route path="/store-billing/history" element={<OrderHistory />} />
+        <Route path="/store-billing" element={<BillingPage />} />
+        <Route path="/billing-page/:id" element={<StoreBill />} />
+        <Route path="/store-variant" element={<ProductVariant />} />
+
+        <Route path="/orders/refunds" element={<Refunds />} />
+        <Route path="/orders/refunds/:id" element={<ViewRefund />} />
+        {/* <Route path="/refunds/:id" element={<ViewRefund />} /> */}
+        {/* <Route path="/refunds/:id" element={<ViewRefund />} /> */}
+        {/* <Route path="/billing" element={<BillingPage />} /> */}
+        </Route>
+      </Routes>
+        </Layout>
+      <ToastContainer />
+
+    </>
+  );
+}
+
+export default App;
